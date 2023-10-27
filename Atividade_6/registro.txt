@@ -1,0 +1,377 @@
+
+
+
+----- Request -----
+GET /dir1 HTTP/1.1
+Host: localhost:1234
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 404 Not Found
+Date: Wed Sep 13 11:45:03 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 13 08:57:53 2023 BRT
+Content-Length: 173
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+GET /dir1/dir11 HTTP/1.1
+Host: localhost:2345
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 404 Not Found
+Date: Wed Sep 13 11:45:10 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 13 08:57:53 2023 BRT
+Content-Length: 173
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+GET /dir1/texto1.html HTTP/1.1
+Host: localhost:1234
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Wed Sep 13 11:45:17 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 06 14:47:22 2023 BRT
+Content-Length: 174
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+GET /dir1/texto2.html HTTP/1.1
+Host: localhost:1234
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 403 Forbidden
+Date: Wed Sep 13 11:45:22 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 13 08:57:40 2023 BRT
+Content-Length: 167
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+GET /dir2 HTTP/1.1
+Host: localhost:2345
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 403 Forbidden
+Date: Wed Sep 13 11:45:29 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 13 08:57:40 2023 BRT
+Content-Length: 167
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+HEAD /dir1 HTTP/1.1
+Host: localhost:1234
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 404 Not Found
+Date: Wed Sep 13 11:45:37 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 13 08:57:53 2023 BRT
+Content-Length: 173
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+HEAD /dir1/dir11 HTTP/1.1
+Host: localhost:2345
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 404 Not Found
+Date: Wed Sep 13 11:46:13 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 13 08:57:53 2023 BRT
+Content-Length: 173
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+HEAD /dir1/texto1.html HTTP/1.1
+Host: localhost:1234
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Wed Sep 13 11:46:32 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 06 14:47:22 2023 BRT
+Content-Length: 174
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+HEAD /dir1/texto2.html HTTP/1.1
+Host: localhost:1234
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 403 Forbidden
+Date: Wed Sep 13 11:46:38 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 13 08:57:40 2023 BRT
+Content-Length: 167
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+HEAD /dir2 HTTP/1.1
+Host: localhost:2345
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 403 Forbidden
+Date: Wed Sep 13 11:46:44 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 13 08:57:40 2023 BRT
+Content-Length: 167
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+OPTIONS / HTTP/1.1
+Host: localhost:2345
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 200 OK
+Allow: GET, HEAD, OPTIONS, TRACE
+Date: Wed Sep 13 11:47:05 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Content-Length: 0
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+TRACE / HTTP/1.1
+Host: localhost:2345
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 200 OK
+Host: localhost:2345
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip,deflate,br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- End -----
+
+
+
+----- Request -----
+Host: localhost:2345
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 400 Bad Request
+Date: Wed Sep 13 11:47:23 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: close
+Content-Length: 0
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+POST /dir2 HTTP/1.1
+Host: localhost:2345
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 501 Not Implemented
+Date: Wed Sep 13 11:47:30 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: close
+Content-Length: 0
+Content-Type: text/html
+----- End -----
+
+
+
+----- Request -----
+OPTIONS / HTTP/1.1
+Host: localhost:2345
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+----- Response Header -----
+HTTP/1.1 200 OK
+Allow: GET, HEAD, OPTIONS, TRACE
+Date: Wed Sep 13 12:41:06 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Content-Length: 0
+Content-Type: text/html
+----- End -----

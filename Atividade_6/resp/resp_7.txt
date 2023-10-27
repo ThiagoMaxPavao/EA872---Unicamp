@@ -1,0 +1,7 @@
+HTTP/1.1 404 Not Found
+Date: Wed Sep 13 11:46:13 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 13 08:57:53 2023 BRT
+Content-Length: 173
+Content-Type: text/html

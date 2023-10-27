@@ -1,0 +1,16 @@
+HTTP/1.1 200 OK
+Date: Wed Sep 13 11:45:17 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavão
+Connection: keep-alive
+Last-Modified: Wed Sep 06 14:47:22 2023 BRT
+Content-Length: 174
+Content-Type: text/html
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>/dir1/texto1.html</title>
+    </head>
+    <body>
+    Este é o arquivo texto1.html na pasta dir1 no sistema.
+    </body>
+</html>
