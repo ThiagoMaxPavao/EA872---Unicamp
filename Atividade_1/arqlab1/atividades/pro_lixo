@@ -1,0 +1,16 @@
+#! /bin/sh
+test -d $HOME/lixo || mkdir $HOME/lixo
+test 0 -eq "$#" && exit 1;
+case $1 in
+    -l) ls $HOME/lixo;;
+    -r) case $# in
+        1) aux=$PWD; cd $HOME/lixo;     ; cd $aux;;
+        *) echo pro_lixo: Uso incorreto;;
+        esac;;
+    *) for i in $*
+        do if test -f $i
+            then mv $i $HOME/lixo
+        else echo pro_lixo: Arquivo $i nao encontrado.
+        fi
+    done;;
+esac

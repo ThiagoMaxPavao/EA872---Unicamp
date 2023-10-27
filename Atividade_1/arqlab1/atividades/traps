@@ -1,0 +1,13 @@
+#! /bin/sh
+
+ARQUIVO=arq.$$
+touch $ARQUIVO
+
+trap "echo 'Algum processo enviou um TERM' 1>&2; rm -f $ARQUIVO; exit;" 15
+trap "echo 'Algum processo enviou um INT' 1>&2; rm -f $ARQUIVO; exit;" 2
+
+while true
+  do
+  # Espera 5 segundos
+  sleep 5
+done

@@ -1,0 +1,9 @@
+while echo "Entre com um comando" 
+read response 
+do 
+case "$response" in 
+'done') break;; # nao tem mais comandos 
+"") continue;; # comando nulo 
+*) eval $response;; # executa o comando 
+esac
+done

@@ -1,0 +1,24 @@
+#! /bin/sh 
+# ^ garante que o script seja executado no shell 'sh'
+echo menu # imprime a palavra menu no shell
+stop=0 # cria uma variavel stop incializada em 0, não mostra no shell
+while test $stop -eq 0 # loop para executar o script entre as palavras 'do' e 'done', 
+                       # executa até que a variável stop seja diferente de 0, com o programa test
+  do # indica inicio do bloco de código do loop
+  echo # imprime uma linha vazia
+  cat <<FIMDOMENU # imprime todos os caracateres até encontrar 'FIMDOMENU', ou seja, as próximas três linhas
+1 : imprime a data 
+2,3 : imprime o diretorio corrente 
+4 : fim
+FIMDOMENU
+  echo # imprime uma linha vazia
+  echo 'opcao? ' # imprime 'opcao? ' na tela
+  read op # lê uma sequência de caracteres do teclado até que seja pressionado enter, a sequência é armazenada em op
+  echo # imprime uma linha vazia
+  case $op in # estrutua de switch para a variável op, 
+      1) date;; # se op = 1, executa o comando date, exibindo a data e hora
+      2|3) pwd;; # se op = 2 ou 3, executa o comando pwd, exibindo o diretório de trabalho
+      4) stop=1;; # se op = 4, seta stop como 1, para quebrar o while na próxima iteração
+      *) echo  opcao invalida! ;; # caso default do switch, apenas imprime 'opcao invalida!'
+  esac # indica fim do switch case iniciado acima
+done # indica final do bloco de código do loop

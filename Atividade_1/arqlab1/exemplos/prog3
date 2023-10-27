@@ -1,0 +1,6 @@
+for i in $* 
+do if who | grep -s $i > /dev/null 
+then echo "$i esta  logado(a)" 
+else echo "$i nao esta  disponivel" 
+fi 
+done

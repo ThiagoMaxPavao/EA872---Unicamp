@@ -1,0 +1,16 @@
+#! /bin/sh 
+# ^ garante que o script seja executado no shell 'sh'
+case $# in # switch case no número de argumentos passado
+    0|1|[3-9]) echo  Uso: classifica arquivo1 arquivo2  1>&2; exit 2 ;; # caso não seja exatamente dois, imprime um exemplo de uso e finaliza a execução do script
+esac # fim do switch case
+total=0; perdida=0; # cria duas variáveis inicializadas em 0, total e perdida
+while read novalinha # lê a entrada do teclado, e salva na variável novalinha até que seja pressionado ENTER, faz isso no início de cada iteração do loop
+  do total=`expr $total + 1` # soma um na variável total, utilizando o programa expr
+  case "$novalinha" in # switch case no valor lido do teclado, armazenado em novalinha
+      *[A-Za-z]*) echo "$novalinha" >> $1 ;; # se conter alguma letra (minúscula ou maiúscula), escreve a linha no arquivo enviado como primeiro parâmetro
+      *[0-9]*) echo "$novalinha" >> $2 ;; # se conter algum digito, escreve no segundo arquivo enviado como parâmetro
+      '<>') break;; # se for '<>', sinal de finalização do uso do script, encerra o loop 
+      *) perdida=`expr $perdida + 1`;; # se não tem letra nem número na linha digitada, nada é feito, soma-se um na variável perdida para registrar o acontecimento
+  esac # fim do switch
+done # fim do loop while
+echo "`expr $total - 1` linha(s) lida(s), $perdida linha(s) nao aproveitada(s)" # imprime o total de linhas lidas e o total de linhas que foram descartadas.

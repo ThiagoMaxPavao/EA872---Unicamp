@@ -1,0 +1,4 @@
+# Este script ecoa os primeiros 5 argumentos 
+# fornecidos ao script 
+echo Os primeiros 5 argumentos na linha 
+echo de comando sao: $1 $2 $3 $4 $5

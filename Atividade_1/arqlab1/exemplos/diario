@@ -1,0 +1,7 @@
+hoje=`date +%m/%d` 
+# apresenta a data no formato mes/dia 
+case $hoje in 
+08/03) echo "aula de EA872";; 
+08/04) echo "atividades praticas de EA872";;
+*) echo "estudar EA872";; 
+esac

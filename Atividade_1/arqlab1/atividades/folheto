@@ -1,0 +1,34 @@
+#! /bin/sh 
+# ^ garante que o script seja executado no shell 'sh'
+case $# in # switch case no número de argumentos passados ao script na chamada de execução
+    0) set `date`; m=$2; y=$6; # nenhum parâmetro passado, executa programa date e salva os valores do mês e do ano atuais nas variáveis m e y
+	case $m in # switch case no mês retornado pelo comando date, traduz de ingles para portugues
+	    Feb) m=Fev;; 
+	    Apr) m=Abr;; 
+	    May) m=Mai;; 
+	    Aug) m=Ago;; 
+	    Sep) m=Set;; 
+	    Oct) m=Out;; 
+	    Dec) m=Dez;; 
+	esac;; # fim do switch de tradução do mês para português
+    1) m=$1; set `date`; y=$6;; # 1 argumento foi passado, interpreta como o mês e pega o ano atual com o date
+    *) m=$1; y=$2 ;; # 2 argumentos passados, interpreta o primeiro como o mês e o segundo como ano
+esac # fim do switch case no número de parâmetros
+case $m in # switch case na sigla do mês, para converter em número
+    jan*|Jan*) m=1;; 
+    fev*|Fev*) m=2;; 
+    mar*|Mar*) m=3;; 
+    abr*|Abr*) m=4;; 
+    mai*|Mai*) m=5;; 
+    jun*|Jun*) m=6;; 
+    jul*|Jul*) m=7;; 
+    ago*|Ago*) m=8;; 
+    set*|Set*) m=9;; 
+    out*|Out*) m=10;; 
+    nov*|Nov*) m=11;; 
+    dez*|Dez*) m=12;; 
+    [1-9]|10|11|12) ;; # caso já seja um número, não faz nada.
+    *) y=$m; m="";; # se não é uma sigla válida (em português) nem um dos meses válidos numericamente
+                    # considera que o número enviado era o ano, então troca as variáveis e deixa o mês vazio
+esac # fim do switch na sigla do mês
+/usr/bin/cal $m $y # imprime um calendário do mês escolhido do ano escolhido, ou atual, caso não tenha sido escolhido

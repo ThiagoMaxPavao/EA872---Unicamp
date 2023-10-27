@@ -1,0 +1,14 @@
+#! /bin/sh
+# ^ garante que o script seja executado no shell 'sh'
+for DIRPATH in `echo $PATH | sed 's/:/ /g'` # envia $PATH para o comando sed via pipe e comando echo, sed é utilizado para substituir as ocorrências do caractere ':' por um espaço. Isso então é usado no for, que irá rodar para cada substring do resultado da substituição utilizando como separador o espaço, ou seja, cada iteração do loop roda com DIRPATH igual a um dos caminhos no path, o espaço é necessário pois é o caractere de separação que o for considera neste caso.
+do # estrutura do loop for
+  if [ ! -d $DIRPATH ] # verifica se o endereço não é de um diretório
+    then # estrutura do if
+    if [ -f $DIRPATH ] # verifica se o endereço é de um arquivo
+      then # estrutura do if
+      echo "$DIRPATH nao e diretorio, e um arquivo" # imprime que o endereço é de um arquivo
+      else # se não for de um arquivo, também não é de um diretório então não existe
+      echo "$DIRPATH nao existe" # imprime que não existe
+    fi # fim do if "é arquivo"
+  fi # fim do if "é diretório"
+done # indica fim do bloco executado pelo for

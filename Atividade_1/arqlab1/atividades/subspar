@@ -1,0 +1,10 @@
+#! /bin/sh
+
+test -n "$1" && param1=$1
+test -n "$2" && param2=$2
+test -n "$3" && param3=$3
+test -n "$4" && param4=$4
+echo "1o resultado do teste:${param1-rs} com param1 = $param1"
+echo "2o resultado do teste:${param2=pa} com param2 = $param2"
+echo "3o resultado do teste:\ com param3 = $param3"
+echo "4o resultado do teste:${param4?Quarto parâmetro não iniciado} com param4 = $param4"

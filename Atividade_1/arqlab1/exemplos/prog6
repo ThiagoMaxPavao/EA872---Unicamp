@@ -1,0 +1,5 @@
+cat <<EOF 
+No momento, este shell script esta  em fase de desenvolvimento. 
+Favor relatar qualquer problema ao seu autor (nome@dominio) 
+EOF 
+exec /usr/local/teste/versao_de_teste

@@ -1,0 +1,8 @@
+#! /bin/sh
+echo "Entre com o seu nome e sobrenome:"
+read nome sobrenome 
+echo "Entre com o seu RA:" 
+read RA 
+echo "Seu nome e' " $nome
+echo "Seu sobrenome e' " $sobrenome 
+echo "Seu RA e' " $RA

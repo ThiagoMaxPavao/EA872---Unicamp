@@ -1,0 +1,4 @@
+while who | grep -s $1 >/dev/null 
+do sleep 60 
+done 
+echo "$1 nao esta  mais logado(a)"

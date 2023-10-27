@@ -1,0 +1,4 @@
+if who | grep -s Maria > /dev/null 
+then echo "Maria esta  logada" 
+else echo "Maria nao esta  disponivel" 
+fi
