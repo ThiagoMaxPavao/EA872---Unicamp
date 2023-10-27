@@ -1,0 +1,9 @@
+# Arquivo de comandos e parâmetros para o exercício ex5.
+comando_a:parâmetro_a1,parâmetro_a2,opção_a1, 324234, x3294549
+comando_b : opção_b1, opção_b2, parametro_xyz
+comando_c :
+: parâmetro_inócuo_1, parâmetro_inútil_1
+comando_d:  	parâmetro_d, 22, 1, opção_inexistente
+#comentario pra ver
+:
+cmd10: p1, p2, p3
