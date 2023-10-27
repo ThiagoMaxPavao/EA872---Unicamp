@@ -1,0 +1,33 @@
+#!/bin/bash
+
+#############################################
+# Script que demonstra conceitos do shell   #
+#############################################
+
+# define a função usage()
+usage(){
+	echo "Usage: $0 filename" # imprime usage
+	exit 1
+}
+ 
+# define a função is_file_exits()
+# $f -> guarda o argumento passado ao script
+is_file_exits(){
+	local f="$1"
+	[[ -f "$f" ]] && return 0 || return 1
+}
+#
+#
+# chama a função usage
+# se não é dado um nome de arquivo
+#
+[[ $# -eq 0 ]] && usage
+ 
+# chama is_file_exits
+if ( is_file_exits "$1" )
+then
+ echo "Arquivo encontrado"
+else
+ echo "Arquivo não encontrado"
+fi
+

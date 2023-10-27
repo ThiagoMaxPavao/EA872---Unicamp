@@ -1,0 +1,10 @@
+program input_p6(input, output);
+{ um pequeno programa }
+var 
+ i,j : integer;
+  begin
+    if (i = 2) then j := 3;
+  else
+    if (i <= 1) or ((i >= 3) and (i <> 99))
+    then j := j mod i;
+end.
