@@ -1,0 +1,906 @@
+
+
+
+----- Request PID = 164542 -----
+GET /
+Connection: close
+Accept: */*
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:24:44 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 164921 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:2345
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:35:55 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 164946 -----
+GET /dir1/texto1.html HTTP/1.1
+Host: 143.106.150.126:2345
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:37:00 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:54 2023 BRT
+Content-Length: 183
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 164946 -----
+GET /dir1/texto2.html HTTP/1.1
+Host: 143.106.150.126:2345
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+
+----- Response Header -----
+HTTP/1.1 403 Forbidden
+Date: Tue Oct 10 20:37:05 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:45:39 2023 BRT
+Content-Length: 176
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 164946 -----
+GET /dir1/texto3.html HTTP/1.1
+Host: 143.106.150.126:2345
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+
+----- Response Header -----
+HTTP/1.1 404 Not Found
+Date: Tue Oct 10 20:37:10 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:45:42 2023 BRT
+Content-Length: 182
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165052 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:2345
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36
+Accept: */*
+Accept-Encoding: gzip
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:40:39 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: _dl_audit_preinit
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165172 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:3456
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:44:45 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165172 -----
+GET /favicon.ico HTTP/1.1
+Host: 143.106.150.126:3456
+Connection: keep-alive
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Referer: http://143.106.150.126:3456/
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+If-Modified-Since: Tue Oct 10 18:47:04 2023 BRT
+
+----- Response Header -----
+HTTP/1.1 404 Not Found
+Date: Tue Oct 10 20:44:46 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:45:42 2023 BRT
+Content-Length: 182
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165267 -----
+GET /dir1/texto1.html HTTP/1.1
+Host: 143.106.150.126:3456
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:48:12 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:54 2023 BRT
+Content-Length: 183
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165275 -----
+GET /dir1/texto1.html HTTP/1.1
+Host: 143.106.150.126:3456
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+If-Modified-Since: Tue Oct 10 18:47:54 2023 BRT
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:48:25 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:54 2023 BRT
+Content-Length: 183
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165275 -----
+GET /dir1/texto2.html HTTP/1.1
+Host: 143.106.150.126:3456
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+
+----- Response Header -----
+HTTP/1.1 403 Forbidden
+Date: Tue Oct 10 20:48:31 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:45:39 2023 BRT
+Content-Length: 176
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165286 -----
+GET /
+Connection: close
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:49:04 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165294 -----
+GET /
+Connection: tomanocu
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:49:31 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: tomanocu
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165294 -----
+GET /dir1/texto2.html
+Connection: close
+
+----- Response Header -----
+HTTP/1.1 403 Forbidden
+Date: Tue Oct 10 20:49:46 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:45:39 2023 BRT
+Content-Length: 176
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165356 -----
+GET /
+Connection: close
+Accept: */*
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:51:35 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165371 -----
+GET /
+Connection: keep-alive
+Accept: */*
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:52:11 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165372 -----
+GET /
+Connection: keep-alive
+Accept: */*
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:52:15 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165373 -----
+GET /
+Connection: keep-alive
+Accept: */*
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:52:18 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165483 -----
+GET /
+Connection: keep-alive
+Accept: */*
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:56:59 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165484 -----
+GET /
+Connection: keep-alive
+Accept: */*
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:57:03 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165492 -----
+GET /
+Connection: keep-alive
+Accept: */*
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 20:57:05 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 20:57:07 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:03:04 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:03:05 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:03:09 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request PID = 165823 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:3456
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+If-Modified-Since: Tue Oct 10 18:47:04 2023 BRT
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 21:03:14 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:04:30 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:04:31 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:04:35 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request PID = 165857 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:3456
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 21:04:40 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165869 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:3456
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 21:04:59 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165878 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:3456
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+If-Modified-Since: Tue Oct 10 18:47:04 2023 BRT
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 21:05:12 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165913 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:2345
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+If-Modified-Since: Tue Oct 10 18:47:04 2023 BRT
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 21:05:53 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:06:12 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:06:13 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:06:18 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request PID = 165933 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:2345
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+If-Modified-Since: Tue Oct 10 18:47:04 2023 BRT
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 21:06:32 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165944 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:2345
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+If-Modified-Since: Tue Oct 10 18:47:04 2023 BRT
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 21:06:52 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165953 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:2345
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+If-Modified-Since: Tue Oct 10 18:47:04 2023 BRT
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 21:07:10 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:07:37 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:07:38 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request PID = 165965 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:2345
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7
+If-Modified-Since: Tue Oct 10 18:47:04 2023 BRT
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 21:07:43 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:08:12 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:08:12 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request PID = 165992 -----
+GET /favicon.ico HTTP/1.1
+Host: 143.106.150.126:2345
+Connection: keep-alive
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60
+Accept: image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Referer: http://143.106.150.126:2345/
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+
+----- Response Header -----
+HTTP/1.1 404 Not Found
+Date: Tue Oct 10 21:08:27 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:45:42 2023 BRT
+Content-Length: 182
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request PID = 165994 -----
+GET / HTTP/1.1
+Host: 143.106.150.126:2345
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: pt-BR,pt;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+
+----- Response Header -----
+HTTP/1.1 200 OK
+Date: Tue Oct 10 21:08:42 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: keep-alive
+Last-Modified: Tue Oct 10 18:47:04 2023 BRT
+Content-Length: 187
+Content-Type: text/html; charset=utf-8
+
+----- End -----
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:09:04 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
+
+
+
+----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----
+----- Response Header feito pelo processo pai -----
+HTTP/1.1 503 Service Unavailable
+Date: Tue Oct 10 21:09:04 2023 BRT
+Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao
+Connection: close
+Last-Modified: Tue Oct 10 18:46:50 2023 BRT
+Content-Length: 204
+Content-Type: text/html; charset=utf-8
+
