@@ -296,15 +296,15 @@ Retorna uma linha de fd em buffer,
 Retorna 0 se tiver terminado o arquivo e 1 se ainda houver mais coisas para ler nele
 */
 int getLine(int fd, char* buffer) {
-    static char auxBuffer[1000];
-    int n_read, i;
+    static char auxBuffer[200];
+    int n_read, i, j;
 
     if (auxBuffer[0] == 0) { // buffer vazio
         n_read = read(fd, auxBuffer, sizeof(auxBuffer) - 1);
         auxBuffer[n_read] = 0;
     } else {
         for (i = 0; auxBuffer[i] != 0 && auxBuffer[i] != '\n'; i++);
-        if (auxBuffer[i] == 0) { // buffer sem uma linha completa, provavelmente
+        if (auxBuffer[i] == 0) { // buffer sem uma linha completa
             n_read = read(fd, auxBuffer + i, sizeof(auxBuffer) - i - 1);
             auxBuffer[n_read + i] = 0;
         }
@@ -320,8 +320,9 @@ int getLine(int fd, char* buffer) {
     } else {
         auxBuffer[i] = 0;
         strcpy(buffer, auxBuffer);
-        for (int j = i + 1; auxBuffer[j] != 0; j++)
+        for (j = i + 1; auxBuffer[j] != 0; j++)
             auxBuffer[j - (i + 1)] = auxBuffer[j];
+        auxBuffer[j - (i + 1)] = 0;
         return 1;
     }
 }
@@ -329,24 +330,28 @@ int getLine(int fd, char* buffer) {
 int hasPermission(int authFd, char *authBase64) {
     char user[127], password[127];
     char userAuth[127], passwordAuth[127];
-    char cripto_n[127], cripto_salt[127];
+    char cripto_salt[127];
     char *passwordCripto;
     char authBuffer[1000];
     char *decodedAuthPassword;
     char *decodedAuth;
+    char c;
     size_t decodedAuthSize;
     int n_read;
     int userFound = 0;
     int keepReading = 1;
-    int match = 0;
+    int i;
+    int cifraoCount = 0;
 
     // decodifica autenticacao enviada, formato user:password
     decodedAuth = base64_decode(authBase64, strlen(authBase64), &decodedAuthSize);
     decodedAuth[decodedAuthSize] = 0;
 
     // separa os valores user e password em suas variáveis
-    for(decodedAuthPassword = decodedAuth; *decodedAuthPassword != ':'; decodedAuthPassword++);
-    decodedAuthPassword = 0;
+    for(decodedAuthPassword = decodedAuth; (*decodedAuthPassword != ':') &&
+                                           (*decodedAuthPassword != 0); decodedAuthPassword++);
+    if(*decodedAuthPassword == 0) return 0;
+    *decodedAuthPassword = 0;
     decodedAuthPassword++;
     strcpy(user, decodedAuth);
     strcpy(password, decodedAuthPassword);
@@ -355,19 +360,35 @@ int hasPermission(int authFd, char *authBase64) {
     // percorre usuarios do arquivo até achar o correspondente
     while(keepReading && !userFound) {
         keepReading = getLine(authFd, authBuffer);
-        sscanf(authBuffer, "%s:%s", userAuth, passwordAuth);
+        if(strlen(authBuffer) == 0) continue; // ignora linhas em branco
+
+        // encontra o caractere de separação ':'
+        for(i = 0; authBuffer[i] != ':' && authBuffer[i] != 0; i++);
+        if(authBuffer[i] == 0) continue;
+
+        authBuffer[i] = 0;
+        strcpy(userAuth, authBuffer);
+        strcpy(passwordAuth, authBuffer + i + 1);
         if(strcmp(userAuth, user) == 0) userFound = 1;
     }
 
+    // nome de usuario não encontrado
     if(!userFound) return 0;
 
-    sscanf(passwordAuth, "$%s$%s", cripto_n, cripto_salt);
-    passwordCripto = crypt(cripto_n, cripto_salt);
-
-    if(strcmp(password, passwordCripto) == 0) {
-        match = 1;
+    // Copia o salt da senha
+    for(i = 0; cifraoCount < 3 && ((c = passwordAuth[i]) != 0); i++) {
+        cripto_salt[i] = c;
+        if(c == '$') cifraoCount++;
     }
+    if(c == 0) return 0;
+    cripto_salt[i] = 0;
 
-    free(passwordCripto);
-    return match;
+    passwordCripto = crypt(password, cripto_salt);
+
+    // compara passwordAuth -> vindo do arquivo de senhas com passwordCripto ->
+    // gerado agora utilizando o salt do usuario encontrado no arquivo de senhas
+    // e a senha informada pelo cliente da requisição.
+    if(!strcmp(passwordAuth, passwordCripto) == 0) return 0; // senha inválida
+
+    return 1; // usuario autorizado
 }
