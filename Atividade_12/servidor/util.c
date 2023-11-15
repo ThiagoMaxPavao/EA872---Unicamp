@@ -9,6 +9,7 @@
 #include <stdarg.h>
 #include <fcntl.h>
 #include "base64.h"
+#include <crypt.h>
 
 p_no_command criaComando(char* command, p_no_option options) {
     p_no_command novo = malloc(sizeof(no_command));
@@ -323,25 +324,23 @@ int getLine(int fd, char* buffer) {
 int hasPermission(int authFd, char *authBase64) {
     char user[127], password[127];
     char userAuth[127], passwordAuth[127];
-    char cripto_salt[127];
-    int cripto_n;
+    char cripto_n[127], cripto_salt[127];
     char *passwordCripto;
     char authBuffer[1000];
     char *decodedAuthPassword;
     char *decodedAuth;
-    char *password
-    int decodedAuthSize;
+    size_t decodedAuthSize;
     int n_read;
     int userFound = 0;
     int keepReading = 1;
-    match = 0;
+    int match = 0;
 
     // decodifica autenticacao enviada, formato user:password
     decodedAuth = base64_decode(authBase64, strlen(authBase64), &decodedAuthSize);
     decodedAuth[decodedAuthSize] = 0;
 
     // separa os valores user e password em suas variáveis
-    for(decodedAuthPassword = decodedAuth; decodedAuthPassword != ':'; decodedAuthPassword++);
+    for(decodedAuthPassword = decodedAuth; *decodedAuthPassword != ':'; decodedAuthPassword++);
     decodedAuthPassword = 0;
     decodedAuthPassword++;
     strcpy(user, decodedAuth);
@@ -357,7 +356,7 @@ int hasPermission(int authFd, char *authBase64) {
 
     if(!userFound) return 0;
 
-    sscanf(passwordAuth, "$%d$%s", &cripto_n, cripto_salt);
+    sscanf(passwordAuth, "$%s$%s", cripto_n, cripto_salt);
     passwordCripto = crypt(cripto_n, cripto_salt);
 
     if(strcmp(password, passwordCripto) == 0) {
