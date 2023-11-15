@@ -239,14 +239,18 @@ char* getParameter(p_no_command comandos_local, char* parameter) {
     return NULL;
 }
 
-int hasAuthentication(char* webspace, char* resource, int* authFd) {
+int hasAuthentication(char* webspace, char* resource_parameter, int* authFd) {
     char aux_path[127];
+    char resource[127];
     char htaccess_path[127];
     char password_path[127];
     int htaccessFd;
     char *resourceEnd;
     int find = 0;
     int n_read;
+
+    // copia recurso desejado para array local
+    strcpy(resource, resource_parameter);
 
     // inicializa resourceEnd, encontrando o caractere nulo.
     for(resourceEnd = resource; *resourceEnd != 0; resourceEnd++);
@@ -277,6 +281,7 @@ int hasAuthentication(char* webspace, char* resource, int* authFd) {
     close(htaccessFd);
 
     // Terminador de string
+    if(password_path[n_read - 1] = '\n') n_read--;
     password_path[n_read] = 0;
 
     if((*authFd = open(password_path, O_RDONLY)) == -1) {
