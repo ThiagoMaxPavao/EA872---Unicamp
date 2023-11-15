@@ -121,3 +121,32 @@ Retorna um ponteiro para o valor de uma chave (comando)
 Retorna NULL se não encontrar o parametro especificado
 */
 char* getParameter(p_no_command comandos_local, char* parameter);
+
+/* 
+Concatena as strings path1 e path2 e grava o resultado em destination.
+retorna a string destination. Coloca uma barra entre os caminhos,para 
+impedir erros em casos que ela não tenha sido fornecida. Vale notar que
+como path1 é um diretório, inserir barras extras não causa problema.
+*/
+char* join_paths(char* destination, char* path1, char* path2);
+
+/* Copia o nome do arquivo especificado por path para a string name */
+void getFilename(char* path, char *name);
+
+/*
+Verifica se o recurso desejado no webspace precisa de autenticacao,
+encontrando o arquivo .htaccess mais proximo do recurso.
+Se precisar, lê o arquivo e retorna em authFd o arquivo de senhas aberto.
+Neste caso retorna 1, indicando que precisa de autenticação.
+Se não precisar, retorna 0.
+Se ocorrer erro na abertura de algum arquivo retorna -1.
+*/
+int hasAuthentication(char* webspace, char* resource, int* authFd);
+
+/*
+Recebe o arquivo contendo os pares de usuario:senha e
+o par usuario:senha em base 64 recebido na requisição
+Retorna 1 se o usuário for reconhecido e tiver autenticação,
+Retorna 0 se não reconhecer o usuário.
+*/
+int hasPermission(int authFd, char* authBase64);

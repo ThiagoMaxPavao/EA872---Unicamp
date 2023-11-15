@@ -7,6 +7,7 @@
 #include <time.h> // imprimir data/hora
 #include <string.h>
 #include <stdarg.h>
+#include <fcntl.h>
 
 p_no_command criaComando(char* command, p_no_option options) {
     p_no_command novo = malloc(sizeof(no_command));
@@ -207,9 +208,82 @@ int isPathConfined(char resource[]) {
     return lowest_level >= 0;
 }
 
+char* join_paths(char* destination, char* path1, char* path2) {
+    char c;
+    int i = 0;
+
+    /* copia path 1 em destination */
+    while((c = path1[i]) != 0) destination[i++] = c;
+
+    /* Adiciona barra entre caminhos */
+    destination[i++] = '/';
+
+    /* Concatena path2 */
+    for(int j = 0; (c = path2[j]) != 0; j++) destination[i++] = c;
+    destination[i] = 0; // finalizador de string
+
+    return destination;
+}
+
+void getFilename(char* path, char *name) {
+    char* aux = strrchr(path, '/') + 1;
+    strcpy(name, aux);
+}
+
 char* getParameter(p_no_command comandos_local, char* parameter) {
     for(p_no_command comando = comandos_local; comando != NULL; comando = comando->prox)
         if(strcmp(comando->command, parameter) == 0)
             return comando->options->option;
     return NULL;
+}
+
+int hasAuthentication(char* webspace, char* resource, int* authFd) {
+    char aux_path[127];
+    char htaccess_path[127];
+    char password_path[127];
+    int htaccessFd;
+    char *resourceEnd;
+    int find = 0;
+    int n_read;
+
+    // inicializa resourceEnd, encontrando o caractere nulo.
+    for(resourceEnd = resource; *resourceEnd != 0; resourceEnd++);
+
+    // procura o arquivo htaccess, começando do diretório mais próximo do recurso pedido
+    // e voltando, até encontrá-lo ou chegar na raiz.
+    while(!find && resourceEnd != resource) {
+        // monta o caminho do arquivo htaccess
+        join_paths(aux_path, webspace, resource);
+        join_paths(htaccess_path, aux_path, ".htaccess");
+
+        // verifica se o arquivo existe
+        if(access(htaccess_path, F_OK) == 0) find = 1;
+
+        // Altera o final da string resource, 'voltando' uma pasta
+        do { resourceEnd--; } while(*resourceEnd != '/' && resourceEnd != resource);
+        *resourceEnd = 0;
+    }
+
+    if(!find) return 0;
+
+    if((htaccessFd = open(htaccess_path, O_RDONLY)) == -1) {
+        return -1;
+    }
+
+    // Lê o caminho para o arquivo de senhas
+    n_read = read(htaccessFd, password_path, sizeof(password_path));
+    close(htaccessFd);
+
+    // Terminador de string
+    password_path[n_read] = 0;
+
+    if((*authFd = open(password_path, O_RDONLY)) == -1) {
+        return -1;
+    }
+
+    return 1;
+}
+
+int hasPermission(int authFd, char* authBase64) {
+
 }

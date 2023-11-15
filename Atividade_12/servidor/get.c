@@ -4,35 +4,6 @@
 #include <string.h>
 #include "util.h"
 
-/* 
-Concatena as strings path1 e path2 e grava o resultado em destination.
-retorna a string destination. Coloca uma barra entre os caminhos,para 
-impedir erros em casos que ela não tenha sido fornecida. Vale notar que
-como path1 é um diretório, inserir barras extras não causa problema.
-*/
-char* join_paths(char* destination, char* path1, char* path2) {
-    char c;
-    int i = 0;
-
-    /* copia path 1 em destination */
-    while((c = path1[i]) != 0) destination[i++] = c;
-
-    /* Adiciona barra entre caminhos */
-    destination[i++] = '/';
-
-    /* Concatena path2 */
-    for(int j = 0; (c = path2[j]) != 0; j++) destination[i++] = c;
-    destination[i] = 0; // finalizador de string
-
-    return destination;
-}
-
-/* Copia o nome do arquivo especificado por path para a string name */
-void getFilename(char* path, char *name) {
-    char* aux = strrchr(path, '/') + 1;
-    strcpy(name, aux);
-}
-
 /*
 Abre o arquivo de erro, de acordo com o status fornecido.
 Acessa o arquivo error_{status}.html e abre, inserindo o valor no ponteiro fd.
@@ -60,18 +31,36 @@ Retorna o file descriptor desses arquivos nesses casos, se forem encontrados.
 Se ocorrer erro, chama openAndReturnError e retorna o status. Caso exista o arquivo
 error_{status}.html, ele é aberto e retornado.
 */
-int get(char* webspace, char* resource, int* fd, char* filename) {
+int get(char* webspace, char* resource, int* fd, char* filename, char* authBase64) {
     char path[127];
     char path_aux1[127];
     char path_aux2[127];
     struct stat statbuf;
+    int authStatus;
     int exist1, exist2;
+    int authFd = -1; // arquivo de senhas para o recurso especificado
 
     *fd = -1; // valor retorno se arquivo não for aberto arquivo nenhum.
 
     if(!isPathConfined(resource)) {
         return openAndReturnError(403, webspace, fd, filename); // Fora do webspace - 403 Forbidden
     }
+
+    // Verifica se o recurso é protegido
+    authStatus = hasAuthentication(webspace, resource, &authFd);
+
+    if(authStatus < 0) {
+        return openAndReturnError(500, webspace, fd, filename); // Erro interno no servidor
+    }
+    
+    // Verifica se usuário tem autorização
+    if(authStatus && (authBase64 == NULL || !hasPermission(authFd, authBase64))) {
+        // Autenticação não informada ou informada mas não validada.
+        return openAndReturnError(401, webspace, fd, filename); // Autenticação necessária
+    }
+
+    // Fecha o arquivo de senhas aberto por hasAuthentication
+    if(authFd != -1) close(authFd);
 
     /* Cria o caminho completo do recurso desejado */
     join_paths(path, webspace, resource);

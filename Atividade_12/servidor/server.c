@@ -14,7 +14,7 @@
 #include <errno.h>
 #include <pthread.h>
 
-extern int get(char* webspace, char* resource, int* fd, char* filename); // funcao para acesso facil ao sistema de arquivos
+extern int get(char* webspace, char* resource, int* fd, char* filename, char* authBase64); // funcao para acesso facil ao sistema de arquivos
 extern p_no_command comandos; // lista de comandos
 extern void yy_scan_string(const char* string); // funcao que passa string para o analisador lexico
 extern int yyparse(void); // funcao que faz o parsing
@@ -42,7 +42,7 @@ Este último caso ocorre quando o cliente envia no cabecalho da requisição o c
 requisição realizada. O que ocorre quando a resposta é 400 Bad Request
 */
 int processRequest(char *webspace, int socket_msg, int fd_log) {
-    char filename[50], *connectionState;
+    char filename[50], *connectionState, *authBase64;
     char request[1024];
     int bytesRead = 0;
     int n_read;
@@ -95,30 +95,30 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     }
 
     /* 
-        Percorre a lista ligada até encontrar um nó que tenha o comando Connection.
-        Salva o valor de seu parametro para enviar na resposta posteriormente, mantendo
+        Salva do parametro Connection para enviar na resposta posteriormente, mantendo
         a mesma definida pelo cliente em sua requisição.
     */
-    for(p_no_command comando = comandos_local; comando != NULL; comando = comando->prox) {
-        if(strcmp(comando->command, "Connection") == 0) {
-            connectionState = comando->options->option;
-            if(strcmp(connectionState, "close") == 0) closeConnection = 1; 
-            break;
-        }
-    }
+    connectionState = getParameter(comandos_local, "Connection");
+    if(strcmp(connectionState, "close") == 0) closeConnection = 1;
+    
+    /*
+    Salva referencia para par usuario:senha
+    + 6 -> para pular o "Basic "
+    */
+    authBase64 = getParameter(comandos_local, "Authorization") + 6;
 
     /* Trata cada caso de método, incluindo o caso de bad request e not implemented */
     int fd, status;
     switch(stringParaMetodo(comandos_local->command)) {
         case GET:
-        status = get(webspace, comandos_local->options->option, &fd, filename);
+        status = get(webspace, comandos_local->options->option, &fd, filename, authBase64);
         cabecalho(status, connectionState, filename, fd, socket_msg, fd_log);
         imprimeConteudo(socket_msg, fd);
         if(fd != -1) close(fd);
         break;
 
         case HEAD:
-        status = get(webspace, comandos_local->options->option, &fd, filename);
+        status = get(webspace, comandos_local->options->option, &fd, filename, authBase64);
         cabecalho(status, connectionState, filename, fd, socket_msg, fd_log);
         if(fd != -1) close(fd);
         break;
@@ -204,7 +204,7 @@ void respostaPadraoOcupado(char *webspace, int socket_msg, int fd_log) {
     dprintf(fd_log, "\n\n\n----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----\n");
     dprintf(fd_log, "----- Response Header feito pela Thread principal -----\n");
 
-    get(webspace, "error_503.html", &fd, filename);
+    get(webspace, "error_503.html", &fd, filename, NULL);
     cabecalho(503, "close", filename, fd, socket_msg, fd_log);
     imprimeConteudo(socket_msg, fd);
 }
