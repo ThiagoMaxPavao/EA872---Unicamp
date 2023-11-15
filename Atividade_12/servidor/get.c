@@ -55,6 +55,9 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
     
     // Verifica se usuário tem autorização
     if(authStatus && (authBase64 == NULL || !hasPermission(authFd, authBase64))) {
+        // Fecha o arquivo de senhas aberto por hasAuthentication
+        if(authFd != -1) close(authFd);
+
         // Autenticação não informada ou informada mas não validada.
         return openAndReturnError(401, webspace, fd, filename); // Autenticação necessária
     }

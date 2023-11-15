@@ -43,15 +43,16 @@ Este último caso ocorre quando o cliente envia no cabecalho da requisição o c
 requisição realizada. O que ocorre quando a resposta é 400 Bad Request
 */
 int processRequest(char *webspace, int socket_msg, int fd_log) {
-    char filename[50], *connectionState, *authBase64;
+    char filename[50], *url, *connectionState, *authBase64;
     char request[1024];
     int bytesRead = 0;
     int n_read;
     int ready;
     int closeConnection = 0;
     int parseStatus;
-    int timeoutMs = 500;
+    int timeoutMs = 5000;
     p_no_command comandos_local;
+    Metodo metodo;
     
     /* Configura struct pollfd para realizar a chamada poll com o socket e evento de leitura */
     struct pollfd fds;
@@ -91,7 +92,7 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     pthread_mutex_unlock(&parsing_mutex);
 
     if(parseStatus == 1) {
-        cabecalho(400, "close", filename, -1, socket_msg, fd_log); // Bad Request
+        cabecalho(400, "close", filename, NULL, -1, socket_msg, fd_log); // Bad Request
         return -2;
     }
 
@@ -106,28 +107,27 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     Salva referencia para par usuario:senha
     + 6 -> para pular o "Basic "
     */
-    authBase64 = getParameter(comandos_local, "Authorization") + 6;
+    authBase64 = getParameter(comandos_local, "Authorization");
+    if(authBase64 != NULL) authBase64 += 6;
 
     /* Trata cada caso de método, incluindo o caso de bad request e not implemented */
     int fd, status;
-    switch(stringParaMetodo(comandos_local->command)) {
-        case GET:
-        status = get(webspace, comandos_local->options->option, &fd, filename, authBase64);
-        cabecalho(status, connectionState, filename, fd, socket_msg, fd_log);
-        imprimeConteudo(socket_msg, fd);
-        if(fd != -1) close(fd);
-        break;
-
+    switch(metodo = stringParaMetodo(comandos_local->command)) {
         case HEAD:
-        status = get(webspace, comandos_local->options->option, &fd, filename, authBase64);
-        cabecalho(status, connectionState, filename, fd, socket_msg, fd_log);
-        if(fd != -1) close(fd);
+        case GET:
+        url = comandos_local->options->option;
+        status = get(webspace, url, &fd, filename, authBase64);
+        cabecalho(status, connectionState, filename, url, fd, socket_msg, fd_log);
+        if(fd != -1) {
+            if(metodo == GET) imprimeConteudo(socket_msg, fd);
+            close(fd);
+        }
         break;
 
         case OPTIONS:
         dupPrintf(socket_msg, fd_log, "HTTP/1.1 200 OK\r\n");
         dupPrintf(socket_msg, fd_log, "Allow: GET, HEAD, OPTIONS, TRACE\r\n");
-        cabecalho(-1, connectionState, filename, -1, socket_msg, fd_log);
+        cabecalho(-1, connectionState, filename, NULL, -1, socket_msg, fd_log);
         break;
 
         case TRACE:
@@ -136,12 +136,12 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
         break;
 
         case INVALID:
-        cabecalho(400, "close", filename, -1, socket_msg, fd_log); // Bad Request
+        cabecalho(400, "close", filename, NULL, -1, socket_msg, fd_log); // Bad Request
         closeConnection = 1;
         break;
 
         default:
-        cabecalho(501, connectionState, filename, -1, socket_msg, fd_log); // Not Implemented
+        cabecalho(501, connectionState, filename, NULL, -1, socket_msg, fd_log); // Not Implemented
         break;
     }
 
@@ -207,7 +207,7 @@ void respostaPadraoOcupado(char *webspace, int socket_msg, int fd_log) {
     dprintf(fd_log, "----- Response Header feito pela Thread principal -----\n");
 
     get(webspace, "error_503.html", &fd, filename, NULL);
-    cabecalho(503, "close", filename, fd, socket_msg, fd_log);
+    cabecalho(503, "close", filename, NULL, fd, socket_msg, fd_log);
     imprimeConteudo(socket_msg, fd);
 }
 

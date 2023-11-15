@@ -88,7 +88,7 @@ Se fd == -1, não há recurso junto à resposta então não há data de modifica
 Content-Length: 0
 Content-Type: text/html
 */
-void cabecalho(int status, char* connection, char* filename, int fd, int fd_resp, int fd_log);
+void cabecalho(int status, char* connection, char* filename, char* realm, int fd, int fd_resp, int fd_log);
 
 /*
 Percorre o arquivo descrito por originFd e imprime todos os seus bytes em destinationFd.

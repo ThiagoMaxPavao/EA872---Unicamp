@@ -119,6 +119,7 @@ char* getStatusText(int status) {
     switch (status) {
         case 200: return "OK";
         case 400: return "Bad Request";
+        case 401: return "Authorization Required";
         case 403: return "Forbidden";
         case 404: return "Not Found";
         case 500: return "Internal Server Error";
@@ -128,7 +129,7 @@ char* getStatusText(int status) {
     }
 }
 
-void cabecalho(int status, char* connection, char* filename, int fd, int fd_resp, int fd_log) {
+void cabecalho(int status, char *connection, char *filename, char *realm, int fd, int fd_resp, int fd_log) {
     time_t timer;
     char dateBuffer[30];
     struct tm* tm_info;
@@ -141,6 +142,9 @@ void cabecalho(int status, char* connection, char* filename, int fd, int fd_resp
     if(status != -1) dupPrintf(fd_resp, fd_log, "HTTP/1.1 %d %s\r\n", status, getStatusText(status));
     dupPrintf(fd_resp, fd_log, "Date: %s\r\n", dateBuffer);
     dupPrintf(fd_resp, fd_log, "Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao\r\n");
+    if(status == 401) {
+        dupPrintf(fd_resp, fd_log, "WWW-Authenticate: Basic realm=\"%s\"\r\n", realm);
+    }
     dupPrintf(fd_resp, fd_log, "Connection: %s\r\n", connection);
 
     if(fd != -1) { // Caso haja um arquivo para imprimir o cabecalho
