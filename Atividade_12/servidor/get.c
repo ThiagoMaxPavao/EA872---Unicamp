@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include "util.h"
 
 /* 
 Concatena as strings path1 e path2 e grava o resultado em destination.
@@ -67,20 +68,8 @@ int get(char* webspace, char* resource, int* fd, char* filename) {
     int exist1, exist2;
 
     *fd = -1; // valor retorno se arquivo não for aberto arquivo nenhum.
-    
-    int current_level = 0; // 0-> raiz, >0 dentro de alguma pasta no webspace, <0 para tras do webspace
-    int lowest_level = 0; // <0 fora do webspace
-    
-    for(int i = 0; resource[i] != 0; i++) {
-        if(resource[i] == '/' && i == 0) continue;
-        if(resource[i] == '/' && resource[i-1] == '/') continue;
-        if(resource[i] == '/' && resource[i-1] == '.') continue;
-        if(resource[i] == '/' && resource[i-1] != '/') current_level++;
-        if(resource[i] == '.' && resource[i-1] == '.') current_level--;
-        if(current_level < lowest_level) lowest_level = current_level;
-    }
 
-    if(lowest_level < 0) {
+    if(!isPathConfined(resource)) {
         return openAndReturnError(403, webspace, fd, filename); // Fora do webspace - 403 Forbidden
     }
 

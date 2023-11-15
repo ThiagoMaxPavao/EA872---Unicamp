@@ -107,3 +107,10 @@ void dupPrintf(int fd1, int fd2, char const *format, ...);
 Retorna 1 se a string str termina com a string suffix e 0 caso contrário.
 */
 int stringEndsWith(const char * str, const char * suffix);
+
+/*
+Verifica se o caminho do recurso acessa algum diretório fora (acima) do webspace.
+Retorna 1 se o caminho for apenas interno ao webspace (confined).
+E 0 se for um caminho invasivo.
+*/
+int isPathConfined(char resource[]);

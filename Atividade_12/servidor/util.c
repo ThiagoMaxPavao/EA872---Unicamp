@@ -190,3 +190,19 @@ int stringEndsWith(const char * str, const char * suffix) {
     (str_len >= suffix_len) &&
     (0 == strcmp(str + (str_len-suffix_len), suffix));
 }
+
+int isPathConfined(char resource[]) {
+    int current_level = 0; // 0-> raiz, >0 dentro de alguma pasta no webspace, <0 para tras do webspace
+    int lowest_level = 0; // <0 fora do webspace
+    
+    for(int i = 0; resource[i] != 0; i++) {
+        if(resource[i] == '/' && i == 0) continue;
+        if(resource[i] == '/' && resource[i-1] == '/') continue;
+        if(resource[i] == '/' && resource[i-1] == '.') continue;
+        if(resource[i] == '/' && resource[i-1] != '/') current_level++;
+        if(resource[i] == '.' && resource[i-1] == '.') current_level--;
+        if(current_level < lowest_level) lowest_level = current_level;
+    }
+
+    return lowest_level >= 0;
+}
