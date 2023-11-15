@@ -272,7 +272,7 @@ int hasAuthentication(char* webspace, char* resource, int* authFd) {
     }
 
     // Lê o caminho para o arquivo de senhas
-    n_read = read(htaccessFd, password_path, sizeof(password_path));
+    n_read = read(htaccessFd, password_path, sizeof(password_path) - 1);
     close(htaccessFd);
 
     // Terminador de string
@@ -285,6 +285,85 @@ int hasAuthentication(char* webspace, char* resource, int* authFd) {
     return 1;
 }
 
-int hasPermission(int authFd, char* authBase64) {
+/*
+Retorna uma linha de fd em buffer,
+Retorna 0 se tiver terminado o arquivo e 1 se ainda houver mais coisas para ler nele
+*/
+int getLine(int fd, char* buffer) {
+    static char auxBuffer[1000];
+    int n_read, i;
 
+    if (auxBuffer[0] == 0) { // buffer vazio
+        n_read = read(fd, auxBuffer, sizeof(auxBuffer) - 1);
+        auxBuffer[n_read] = 0;
+    } else {
+        for (i = 0; auxBuffer[i] != 0 && auxBuffer[i] != '\n'; i++);
+        if (auxBuffer[i] == 0) { // buffer sem uma linha completa, provavelmente
+            n_read = read(fd, auxBuffer + i, sizeof(auxBuffer) - i - 1);
+            auxBuffer[n_read + i] = 0;
+        }
+    }
+
+    // aqui, com certeza há pelo menos uma linha no buffer.
+    // basta copiá-la e depois trazer os caracteres restantes para o começo do buffer
+    for (i = 0; auxBuffer[i] != 0 && auxBuffer[i] != '\n'; i++);
+
+    if (auxBuffer[i] == 0) { // só há essa linha e nada mais, fim do arquivo
+        strcpy(buffer, auxBuffer);
+        return 0;
+    } else {
+        auxBuffer[i] = 0;
+        strcpy(buffer, auxBuffer);
+        for (int j = i + 1; auxBuffer[j] != 0; j++)
+            auxBuffer[j - (i + 1)] = auxBuffer[j];
+        return 1;
+    }
+}
+
+int hasPermission(int authFd, char *authBase64) {
+    char user[127], password[127];
+    char userAuth[127], passwordAuth[127];
+    char cripto_salt[127];
+    int cripto_n;
+    char *passwordCripto;
+    char authBuffer[1000];
+    char *decodedAuthPassword;
+    char *decodedAuth;
+    char *password
+    int decodedAuthSize;
+    int n_read;
+    int userFound = 0;
+    int keepReading = 1;
+    match = 0;
+
+    // decodifica autenticacao enviada, formato user:password
+    decodedAuth = base64_decode(authBase64, strlen(authBase64), &decodedAuthSize);
+    decodedAuth[decodedAuthSize] = 0;
+
+    // separa os valores user e password em suas variáveis
+    for(decodedAuthPassword = decodedAuth; decodedAuthPassword != ':'; decodedAuthPassword++);
+    decodedAuthPassword = 0;
+    decodedAuthPassword++;
+    strcpy(user, decodedAuth);
+    strcpy(password, decodedAuthPassword);
+    free(decodedAuth);
+
+    // percorre usuarios do arquivo até achar o correspondente
+    while(keepReading && !userFound) {
+        keepReading = getLine(authFd, authBuffer);
+        sscanf(authBuffer, "%s:%s", userAuth, passwordAuth);
+        if(strcmp(userAuth, user) == 0) userFound = 1;
+    }
+
+    if(!userFound) return 0;
+
+    sscanf(passwordAuth, "$%d$%s", &cripto_n, cripto_salt);
+    passwordCripto = crypt(cripto_n, cripto_salt);
+
+    if(strcmp(password, passwordCripto) == 0) {
+        match = 1;
+    }
+
+    free(passwordCripto);
+    return match;
 }
