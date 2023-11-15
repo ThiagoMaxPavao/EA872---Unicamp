@@ -13,6 +13,7 @@
 #include <sys/wait.h>
 #include <errno.h>
 #include <pthread.h>
+#include "base64.h"
 
 extern int get(char* webspace, char* resource, int* fd, char* filename, char* authBase64); // funcao para acesso facil ao sistema de arquivos
 extern p_no_command comandos; // lista de comandos
@@ -185,6 +186,7 @@ void * HandleConnection(void * data) {
 void closeServer() {
     printf("\nDesligando servidor e saindo...\n");
 
+    base64_cleanup(); // libera tabela de (de)codificação base64
     close(socket_server); // Fecha servidor
     close(fd_log); // Fecha arquivo de log
     exit(0);
@@ -226,6 +228,9 @@ int main(int argc, char *argv[]) {
         printf("Uso: %s <Web Space> <Porta> <Arquivo de Log> <Max threads>\n", argv[0]);
         exit(1);
     }
+
+    // Inicializa tabela para (de)codificação base64.
+    build_decoding_table();
 
     /*
         Realiza a leitura dos parâmetros

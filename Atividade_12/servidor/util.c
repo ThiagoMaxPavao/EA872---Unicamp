@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <fcntl.h>
+#include "base64.h"
 
 p_no_command criaComando(char* command, p_no_option options) {
     p_no_command novo = malloc(sizeof(no_command));
