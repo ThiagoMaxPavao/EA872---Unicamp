@@ -384,8 +384,16 @@ int hasPermission(int authFd, char *authBase64) {
         cripto_salt[i] = c;
         if(c == '$') cifraoCount++;
     }
-    if(c == 0) return 0;
     cripto_salt[i] = 0;
+
+    // Caso não tenham '$'s na senha, então foi utilizada criptografia default
+    // Neste caso copia o salt, que são os dois primeiros caracteres da senha criptografada
+    if(c == 0 && cifraoCount != 0) return 0;
+    else if(cifraoCount == 0) {
+        cripto_salt[0] = passwordAuth[0];
+        cripto_salt[1] = passwordAuth[1];
+        cripto_salt[2] = 0;
+    }
 
     passwordCripto = crypt(password, cripto_salt);
 
