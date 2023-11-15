@@ -114,3 +114,10 @@ Retorna 1 se o caminho for apenas interno ao webspace (confined).
 E 0 se for um caminho invasivo.
 */
 int isPathConfined(char resource[]);
+
+/*
+Percorre a lista ligada até encontrar um nó que tenha o comando Parameter.
+Retorna um ponteiro para o valor de uma chave (comando)
+Retorna NULL se não encontrar o parametro especificado
+*/
+char* getParameter(p_no_command comandos_local, char* parameter);

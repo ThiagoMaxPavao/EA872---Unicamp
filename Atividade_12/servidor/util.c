@@ -206,3 +206,10 @@ int isPathConfined(char resource[]) {
 
     return lowest_level >= 0;
 }
+
+char* getParameter(p_no_command comandos_local, char* parameter) {
+    for(p_no_command comando = comandos_local; comando != NULL; comando = comando->prox)
+        if(strcmp(comando->command, parameter) == 0)
+            return comando->options->option;
+    return NULL;
+}
