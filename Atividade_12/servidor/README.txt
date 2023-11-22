@@ -2,7 +2,7 @@ Para fazer a compilação e gerar o arquivo executável 'server' basta executar,
 
 bison -d sint.y
 flex lex.l
-gcc get.c util.c lex.yy.c sint.tab.c server.c base64.c -o server -lfl -ly -lcrypt
+gcc get.c util.c lex.yy.c sint.tab.c server.c base64.c -o server -lfl -ly -lcrypt -lpthread
 
 Neste último pode ser necessário remover as flags de bibliotecas '-lfl' e/ou '-ly' a depender do estado do sistema.
 Alternativamente, dentre os arquivos existe um 'Makefile' que pode ser utilizado para gerar o executável. Neste caso basta executar
