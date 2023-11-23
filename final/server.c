@@ -14,8 +14,8 @@
 #include <errno.h>
 #include <pthread.h>
 #include "base64.h"
+#include "get.h"
 
-extern int get(char* webspace, char* resource, int* fd, char* filename, char* authBase64); // funcao para acesso facil ao sistema de arquivos
 extern p_no_command comandos; // lista de comandos
 extern void yy_scan_string(const char* string); // funcao que passa string para o analisador lexico
 extern int yyparse(void); // funcao que faz o parsing
@@ -24,7 +24,7 @@ int fd_log, socket_server;
 pthread_mutex_t count_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t parsing_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-int N_threads = 3; // maximo de threads executando simultaneamente
+int N_threads;     // maximo de threads executando simultaneamente
 int n_threads = 0; // contador de threads em execução
 
 /*
@@ -205,8 +205,8 @@ void respostaPadraoOcupado(char *webspace, int socket_msg, int fd_log) {
 
     dprintf(fd_log, "\n\n\n----- Request recebido mas sem disponibilidade para atender, enviando mensagem padrão e página informativa -----\n");
     dprintf(fd_log, "----- Response Header feito pela Thread principal -----\n");
-
-    get(webspace, "error_503.html", &fd, filename, NULL);
+    
+    openAndReturnError(503,  &fd, filename);
     cabecalho(503, "close", filename, NULL, fd, socket_msg, fd_log);
     imprimeConteudo(socket_msg, fd);
 }
@@ -235,6 +235,7 @@ int main(int argc, char *argv[]) {
     /*
         Realiza a leitura dos parâmetros
     */
+    configureErrorPagesPath(argv[0]);
     webspace = argv[1];
     portNumber = atoi(argv[2]);
     logFilename = argv[3];
