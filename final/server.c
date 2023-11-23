@@ -120,8 +120,9 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
         a mesma definida pelo cliente em sua requisição.
     */
     connectionState = getParameter(comandos_local, "Connection");
+    if(connectionState == NULL) connectionState = "keep-alive";
     if(strcmp(connectionState, "close") == 0) closeConnection = 1;
-    
+
     /*
     Salva referencia para par usuario:senha
     + 6 -> para pular o "Basic "
@@ -144,8 +145,10 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
         break;
 
         case OPTIONS:
+        url = comandos_local->options->option;
         dupPrintf(socket_msg, fd_log, "HTTP/1.1 200 OK\r\n");
-        dupPrintf(socket_msg, fd_log, "Allow: GET, HEAD, OPTIONS, TRACE\r\n");
+        dupPrintf(socket_msg, fd_log, stringEndsWith(url, "change_password.html") ? 
+        "Allow: GET, HEAD, POST, OPTIONS, TRACE\r\n" : "Allow: GET, HEAD, OPTIONS, TRACE\r\n");
         cabecalho(-1, connectionState, filename, NULL, -1, socket_msg, fd_log);
         break;
 
