@@ -101,11 +101,13 @@ char* getContentType(char* filename) {
             return "application/javascript; charset=utf-8";
         } else if(strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0) {
             return "image/jpeg";
+        } else if(strcmp(ext, "gif") == 0) {
+            return "image/gif";
         } else if(strcmp(ext, "png") == 0) {
             return "image/png";
         } else if(strcmp(ext, "pdf") == 0) {
             return "application/pdf";
-        }
+        } 
     }
 
     return "text/plain; charset=utf-8"; // Padrão
