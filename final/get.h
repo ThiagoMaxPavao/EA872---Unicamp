@@ -1,8 +1,8 @@
 /*
-Configura a variável errorPagesPath utilizando o caminho do programa,
+Configura a variável serverPagesPath do módulo utilizando o caminho do programa,
 este pode ser obtido através de argv[0].
 */
-void configureErrorPagesPath(char *programPath);
+void configureServerPagesPath(char *programPath);
 
 /*
 Abre o arquivo de erro, de acordo com o status fornecido.

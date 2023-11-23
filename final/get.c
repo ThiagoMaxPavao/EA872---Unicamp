@@ -6,14 +6,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static char errorPagesPath[100];
+static char serverPagesPath[100];
 
-void configureErrorPagesPath(char *programPath) {
+void configureServerPagesPath(char *programPath) {
     int i, j;
-    char folder[] = "error_pages";
-    strcpy(errorPagesPath, programPath);
-    for(i = 0; errorPagesPath[i] != 0; i++);
-    for(; i>=0 && errorPagesPath[i] != '/'; i--);
+    char folder[] = "server_pages";
+    strcpy(serverPagesPath, programPath);
+    for(i = 0; serverPagesPath[i] != 0; i++);
+    for(; i>=0 && serverPagesPath[i] != '/'; i--);
     
     if(i == 0) {
         printf("\nCaminho do programa não identificado, encerrando execução...\n");
@@ -21,8 +21,8 @@ void configureErrorPagesPath(char *programPath) {
     }
 
     for(j = 0; folder[j] != 0; j++)
-        errorPagesPath[++i] = folder[j];
-    errorPagesPath[++i] = 0;
+        serverPagesPath[++i] = folder[j];
+    serverPagesPath[++i] = 0;
 }
 
 int openAndReturnError(int status, int* fd, char* filename) {
@@ -34,7 +34,7 @@ int openAndReturnError(int status, int* fd, char* filename) {
         case 503: strcpy(filename, "error_503.html"); break;
         default: return status; break;
     }
-    join_paths(path, errorPagesPath, filename);
+    join_paths(path, serverPagesPath, filename);
     *fd = open(path, O_RDONLY); // se não abrir, fd=-1 e não retorna pagina de erro.
     return status;
 }
