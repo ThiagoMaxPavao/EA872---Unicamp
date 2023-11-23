@@ -60,6 +60,13 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
     if(authStatus < 0) {
         return openAndReturnError(500, fd, filename); // Erro interno no servidor
     }
+
+    if(authStatus && stringEndsWith(resource, "change_password.html")) {
+        join_paths(path, serverPagesPath, "change_password.html");
+        if((*fd = open(path, O_RDONLY)) == -1)
+            return openAndReturnError(500, fd, filename); // Erro interno no servidor
+        return 200;
+    }
     
     // Verifica se usuário tem autorização
     if(authStatus && (authBase64 == NULL || !hasPermission(authFd, authBase64))) {
