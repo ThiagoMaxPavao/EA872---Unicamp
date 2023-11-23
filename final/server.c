@@ -44,7 +44,10 @@ requisição realizada. O que ocorre quando a resposta é 400 Bad Request
 */
 int processRequest(char *webspace, int socket_msg, int fd_log) {
     char filename[50], *url, *connectionState, *authBase64;
-    char request[1024];
+    char request[1024]; // cabecalho da requisição
+    char content[1024]; // corpo da requisição
+    char *contentLengthHeader;
+    int contentLength = 0;
     int bytesRead = 0;
     int n_read;
     int ready;
@@ -74,14 +77,10 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
 
         bytesRead += n_read;
         request[bytesRead] = 0;
-    } while(!stringEndsWith(request, "\r\n\r\n"));
+    } while(strstr(request, "\r\n\r\n") == NULL); // loop enquanto não encontra o fim de um header
 
-    printf("Requisição recebida por thread %ld:\n%s", pthread_self(), request);
-
-    /* Imprime Requisição feita na tela e no arquivo de log */
-    dprintf(fd_log, "\n\n\n----- Request Thread = %ld -----\n", pthread_self()); // formatacao do logfile
-    dprintf(fd_log, "%s", request);
-    dprintf(fd_log, "----- Response Header -----\n"); // formatacao do logfile
+    char *headerEnd = strstr(request, "\r\n\r\n");
+    headerEnd[2] = 0; // coloca o finalizador da string de request
 
     // REGIÃO CRÍTICA -> flex e bison utilizam variáveis globais
     pthread_mutex_lock(&parsing_mutex);
@@ -90,6 +89,26 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     comandos_local = comandos; // copia lista ligada para varíavel local
     comandos = NULL; // limpa lista global para poder ser utilizada por qualquer thread
     pthread_mutex_unlock(&parsing_mutex);
+
+    contentLengthHeader = getParameter(comandos_local, "Content-Length");
+    contentLength = contentLengthHeader == NULL ? 0 : atoi(contentLengthHeader);
+    if(contentLength != 0) {
+        strcpy(content, headerEnd+4);
+        bytesRead = strlen(content);
+        read(socket_msg, content + bytesRead, contentLength - bytesRead);
+    }
+
+    /* Imprime Requisição recebida na tela e no arquivo de log */
+    printf("Requisição recebida por thread %ld:\n%s\n", pthread_self(), request);
+    if(contentLength != 0) printf("Corpo da requisição:\n%s\n", content);
+
+    dprintf(fd_log, "\n\n\n----- Request Header - Thread = %ld -----\n", pthread_self()); // formatacao do logfile
+    dprintf(fd_log, "%s\n", request);
+    if(contentLength != 0) {
+        dprintf(fd_log, "----- Request Content - Thread = %ld -----\n", pthread_self()); // formatacao do logfile
+        dprintf(fd_log, "%s\n\n", content);
+    }
+    dprintf(fd_log, "----- Response Header -----\n"); // formatacao do logfile
 
     if(parseStatus == 1) {
         cabecalho(400, "close", filename, NULL, -1, socket_msg, fd_log); // Bad Request
