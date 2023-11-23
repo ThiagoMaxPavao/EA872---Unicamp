@@ -189,6 +189,15 @@ void dupPrintf(int fd1, int fd2, char const *format, ...) {
     va_end(ap);
 }
 
+int stringEndsWith(const char * str, const char * suffix) {
+  int str_len = strlen(str);
+  int suffix_len = strlen(suffix);
+
+  return 
+    (str_len >= suffix_len) &&
+    (0 == strcmp(str + (str_len-suffix_len), suffix));
+}
+
 int isPathConfined(char resource[]) {
     int current_level = 0; // 0-> raiz, >0 dentro de alguma pasta no webspace, <0 para tras do webspace
     int lowest_level = 0; // <0 fora do webspace
