@@ -82,6 +82,20 @@ Metodo stringParaMetodo(char* str) {
     return INVALID;
 }
 
+static char  textHtmlContentType[30] = "text/html";
+static char   textCssContentType[30] = "text/css";
+static char   textTxtContentType[30] = "text/txt";
+static char textPlainContentType[30] = "text/plain";
+
+void configureCharset(char *charset) {
+    char aux[20] = "; charset=";
+    strcat(aux, charset);
+    strcat(textHtmlContentType, aux);
+    strcat(textCssContentType, aux);
+    strcat(textTxtContentType, aux);
+    strcat(textPlainContentType, aux);
+}
+
 /*
 Retorna uma string para o valor de Content-Type da resposta baseando-se no nome do arquivo
 Faz a verificação de acordo com o nome do arquivo.
@@ -92,13 +106,13 @@ char* getContentType(char* filename) {
     if(ext) {
         ext++; // pula o ponto
         if(strcmp(ext, "html") == 0) {
-            return "text/html; charset=utf-8";
+            return textHtmlContentType;
         } else if(strcmp(ext, "css") == 0) {
-            return "text/css; charset=utf-8";
+            return textCssContentType;
         } else if(strcmp(ext, "txt") == 0) {
-            return "text/txt; charset=utf-8";
+            return textTxtContentType;
         } else if(strcmp(ext, "js") == 0) {
-            return "application/javascript; charset=utf-8";
+            return "application/javascript";
         } else if(strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0) {
             return "image/jpeg";
         } else if(strcmp(ext, "gif") == 0) {
@@ -110,7 +124,7 @@ char* getContentType(char* filename) {
         } 
     }
 
-    return "text/plain; charset=utf-8"; // Padrão
+    return textPlainContentType; // Padrão
 }
 
 /*

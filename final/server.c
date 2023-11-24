@@ -227,7 +227,6 @@ void closeServer() {
 /*
 Função de envio padrão de resposta de servidor ocupado.
 Acessa o arquivo error_503.html na base do webspace.
-Envia para
 */
 void respostaPadraoOcupado(char *webspace, int socket_msg, int fd_log) {
     int fd;
@@ -256,8 +255,8 @@ int main(int argc, char *argv[]) {
     pthread_t tid;
     
     /* Verifica formato da chamada */
-    if(argc != 5) {
-        printf("Uso: %s <Web Space> <Porta> <Arquivo de Log> <Max threads>\n", argv[0]);
+    if(argc != 5 && argc != 6) {
+        printf("Uso: %s <Web Space> <Porta> <Arquivo de Log> <Max threads> [charset (opcional)]\n", argv[0]);
         exit(1);
     }
 
@@ -272,6 +271,7 @@ int main(int argc, char *argv[]) {
     portNumber = atoi(argv[2]);
     logFilename = argv[3];
     N_threads = atoi(argv[4]);
+    if(argc == 6) configureCharset(argv[5]);
 
     /* Abre o arquivo de log, indicando se houver erro */
     if((fd_log = open(logFilename, O_APPEND | O_CREAT | O_WRONLY, 0600)) == -1) {
