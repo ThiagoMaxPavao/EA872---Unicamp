@@ -294,7 +294,19 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
     */
     newPasswordCripto = crypt(newPassword, cripto_salt);
 
-    printf("NOVA SENHA: [%s]\n", newPasswordCripto);
+    /*
+    Sobreescreve a antiga no arquivo
+    */
+    lseek(authFd, position + strlen(username) + 1, SEEK_SET);
+    write(authFd, newPasswordCripto, strlen(newPasswordCripto));
 
-    return openAndReturnError(500, fd, filename);
+    /*
+    Retorna página de sucesso
+    */
+    close(authFd);
+    join_paths(path, serverPagesPath, "change_password_success.html");
+    getFilename(path, filename);
+    if((*fd = open(path, O_RDONLY)) == -1)
+        return openAndReturnError(500, fd, filename); // Erro interno no servidor
+    return 200; // OK
 }
