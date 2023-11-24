@@ -144,9 +144,23 @@ Se ocorrer erro na abertura de algum arquivo retorna -1.
 int hasAuthentication(char* webspace, char* resource, int* authFd);
 
 /*
+Retorna uma linha de fd em buffer,
+Retorna 0 se tiver terminado o arquivo e 1 se ainda houver mais coisas para ler nele
+*/
+int getLine(int fd, char* buffer, int resetBuffer);
+
+/*
+Recebe o arquivo contendo os pares de usuario:senha,
+o usuario e a senha que se deseja verificar.
+Retorna 1 se o usuário for reconhecido e tiver autenticação,
+Retorna 0 se não reconhecer o usuário.
+*/
+int hasPermission(int authFd, char *user, char *password);
+
+/*
 Recebe o arquivo contendo os pares de usuario:senha e
 o par usuario:senha em base 64 recebido na requisição
 Retorna 1 se o usuário for reconhecido e tiver autenticação,
 Retorna 0 se não reconhecer o usuário.
 */
-int hasPermission(int authFd, char* authBase64);
+int hasPermissionByBase64(int authFd, char* authBase64);

@@ -124,6 +124,7 @@ char* getStatusText(int status) {
         case 401: return "Authorization Required";
         case 403: return "Forbidden";
         case 404: return "Not Found";
+        case 405: return "Method Not Allowed";
         case 500: return "Internal Server Error";
         case 501: return "Not Implemented";
         case 503: return "Service Unavailable";
@@ -290,20 +291,21 @@ int hasAuthentication(char* webspace, char* resource_parameter, int* authFd) {
     if(password_path[n_read - 1] = '\n') n_read--;
     password_path[n_read] = 0;
 
-    if((*authFd = open(password_path, O_RDONLY)) == -1) {
+    if((*authFd = open(password_path, O_RDWR)) == -1) {
         return -1;
     }
 
     return 1;
 }
 
-/*
-Retorna uma linha de fd em buffer,
-Retorna 0 se tiver terminado o arquivo e 1 se ainda houver mais coisas para ler nele
-*/
-int getLine(int fd, char* buffer) {
+int getLine(int fd, char* buffer, int resetBuffer) {
     static char auxBuffer[200];
     int n_read, i, j;
+
+    if(resetBuffer) {
+        for(i = 0; i<sizeof(auxBuffer); i++) auxBuffer[i] = 0;
+        return 0;
+    }
 
     if (auxBuffer[0] == 0) { // buffer vazio
         n_read = read(fd, auxBuffer, sizeof(auxBuffer) - 1);
@@ -333,39 +335,23 @@ int getLine(int fd, char* buffer) {
     }
 }
 
-int hasPermission(int authFd, char *authBase64) {
-    char user[127], password[127];
+int hasPermission(int authFd, char *user, char *password) {
     char userAuth[127], passwordAuth[127];
     char cripto_salt[127];
     char *passwordCripto;
-    char authBuffer[1000];
-    char *decodedAuthPassword;
-    char *decodedAuth;
+    char authBuffer[200];
     char c;
-    size_t decodedAuthSize;
     int n_read;
     int userFound = 0;
     int keepReading = 1;
     int i;
     int cifraoCount = 0;
 
-    // decodifica autenticacao enviada, formato user:password
-    decodedAuth = base64_decode(authBase64, strlen(authBase64), &decodedAuthSize);
-    decodedAuth[decodedAuthSize] = 0;
-
-    // separa os valores user e password em suas variáveis
-    for(decodedAuthPassword = decodedAuth; (*decodedAuthPassword != ':') &&
-                                           (*decodedAuthPassword != 0); decodedAuthPassword++);
-    if(*decodedAuthPassword == 0) return 0;
-    *decodedAuthPassword = 0;
-    decodedAuthPassword++;
-    strcpy(user, decodedAuth);
-    strcpy(password, decodedAuthPassword);
-    free(decodedAuth);
+    getLine(0, NULL, 1); // reseta o buffer auxiliar da função
 
     // percorre usuarios do arquivo até achar o correspondente
     while(keepReading && !userFound) {
-        keepReading = getLine(authFd, authBuffer);
+        keepReading = getLine(authFd, authBuffer, 0);
         if(strlen(authBuffer) == 0) continue; // ignora linhas em branco
 
         // encontra o caractere de separação ':'
@@ -405,4 +391,27 @@ int hasPermission(int authFd, char *authBase64) {
     if(!strcmp(passwordAuth, passwordCripto) == 0) return 0; // senha inválida
 
     return 1; // usuario autorizado
+}
+
+int hasPermissionByBase64(int authFd, char *authBase64) {
+    char user[127], password[127];
+    char *decodedAuthPassword;
+    char *decodedAuth;
+    size_t decodedAuthSize;
+
+    // decodifica autenticacao enviada, formato user:password
+    decodedAuth = base64_decode(authBase64, strlen(authBase64), &decodedAuthSize);
+    decodedAuth[decodedAuthSize] = 0;
+
+    // separa os valores user e password em suas variáveis
+    for(decodedAuthPassword = decodedAuth; (*decodedAuthPassword != ':') &&
+                                           (*decodedAuthPassword != 0); decodedAuthPassword++);
+    if(*decodedAuthPassword == 0) return 0;
+    *decodedAuthPassword = 0;
+    decodedAuthPassword++;
+    strcpy(user, decodedAuth);
+    strcpy(password, decodedAuthPassword);
+    free(decodedAuth);
+
+    return hasPermission(authFd, user, password);
 }

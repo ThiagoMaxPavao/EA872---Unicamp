@@ -161,6 +161,16 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
         cabecalho(400, "close", filename, NULL, -1, socket_msg, fd_log); // Bad Request
         closeConnection = 1;
         break;
+        
+        case POST:
+        url = comandos_local->options->option;
+        status = processPost(webspace, url, &fd, filename, content);
+        cabecalho(status, connectionState, filename, url, fd, socket_msg, fd_log);
+        if(fd != -1) {
+            imprimeConteudo(socket_msg, fd);
+            close(fd);
+        }
+        break;
 
         default:
         cabecalho(501, connectionState, filename, NULL, -1, socket_msg, fd_log); // Not Implemented

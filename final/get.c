@@ -30,6 +30,7 @@ int openAndReturnError(int status, int* fd, char* filename) {
     switch(status) {
         case 403: strcpy(filename, "error_403.html"); break;
         case 404: strcpy(filename, "error_404.html"); break;
+        case 405: strcpy(filename, "error_405.html"); break;
         case 500: strcpy(filename, "error_500.html"); break;
         case 503: strcpy(filename, "error_503.html"); break;
         default: return status; break;
@@ -57,19 +58,27 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
     // Verifica se o recurso é protegido
     authStatus = hasAuthentication(webspace, resource, &authFd);
 
+    // Erro ao abrir .htaccess ou .htpassword
     if(authStatus < 0) {
+        printf("Ocorreu um erro ao executar hasAuthentication,\nPossivelmente na abertura de .htaccess ou .htpassword.\n");
+        if(authFd != -1) close(authFd);
         return openAndReturnError(500, fd, filename); // Erro interno no servidor
     }
 
+    /*
+    Verifica se o recurso solicitado é o formulário de troca de senha
+    Só verifica se o recurso for protegido.
+    */
     if(authStatus && stringEndsWith(resource, "change_password.html")) {
         join_paths(path, serverPagesPath, "change_password.html");
+        getFilename(path, filename);
         if((*fd = open(path, O_RDONLY)) == -1)
             return openAndReturnError(500, fd, filename); // Erro interno no servidor
         return 200;
     }
     
     // Verifica se usuário tem autorização
-    if(authStatus && (authBase64 == NULL || !hasPermission(authFd, authBase64))) {
+    if(authStatus && (authBase64 == NULL || !hasPermissionByBase64(authFd, authBase64))) {
         // Fecha o arquivo de senhas aberto por hasAuthentication
         if(authFd != -1) close(authFd);
 
@@ -143,4 +152,149 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
         mas nenhum deles tem acesso de leitura, retorna forbidden.
     */
     return openAndReturnError(403, fd, filename); // Sem permissão de leitura - 403 Forbidden
+}
+
+int processPost(char* webspace, char* resource, int* fd, char* filename, char *requestContent) {
+    char path[127];
+    char username[127] = "";
+    char password[127] = "";
+    char newPassword[127] = "";
+    char newPasswordConfirm[127] = "";
+    char content[512];
+    const char token_separators[3] = "&=";
+    char authBuffer[200];
+    char cripto_salt[127];
+    char *newPasswordCripto;
+    int keepReading = 1;
+    int authStatus;
+    int authFd = -1;
+    int position = 0;
+    char *token, c;
+    int i;
+    int cifraoCount = 0;
+
+    if(!stringEndsWith(resource, "change_password.html")) {
+        return openAndReturnError(405, fd, filename); // POST sem ser para troca de senha
+                                                      // retorn erro 405 - Method Not Allowed
+    }
+    
+    // Verifica se o recurso é protegido
+    authStatus = hasAuthentication(webspace, resource, &authFd);
+
+    // Erro na abertura de .htaccess ou .htpassword
+    if(authStatus < 0) {
+        printf("Ocorreu um erro ao executar hasAuthentication,\nPossivelmente na abertura de .htaccess ou .htpassword.\n");
+        if(authFd != -1) close(authFd);
+        return openAndReturnError(500, fd, filename); // Erro interno no servidor
+    }
+
+    // Diretório sem proteção -> Bad Request, não faz sentido alterar a senha.
+    if(authStatus == 0) {
+        if(authFd != -1) close(authFd);
+        join_paths(path, serverPagesPath, "error_cp_unprotected_directory.html");
+        getFilename(path, filename);
+        if((*fd = open(path, O_RDONLY)) == -1)
+            return openAndReturnError(500, fd, filename); // Erro interno no servidor
+        return 400;
+    }
+
+    strcpy(content, requestContent);
+
+    token = strtok(content, token_separators);
+
+    /*
+    Percorre cada par chave=valor, reconhece o tipo e salva na variavel correspondente
+    Troca os '+' por espaços nas variáveis finais.
+    */
+    while( token != NULL ) {
+        char *currentField = NULL;
+        if(strcmp(token, "username") == 0)              currentField = username;
+        if(strcmp(token, "current-password") == 0)      currentField = password;
+        if(strcmp(token, "new-password") == 0)          currentField = newPassword;
+        if(strcmp(token, "new-password-confirm") == 0)  currentField = newPasswordConfirm;
+
+        if(currentField != NULL) {
+            token = strtok(NULL, token_separators);
+            strcpy(currentField, token);
+            for(int i = 0; currentField[i] != 0; i++)
+                if(currentField[i] == '+') currentField[i] = ' ';
+        }
+
+        token = strtok(NULL, token_separators);
+    }
+
+    /*
+    Verifica se algum dos campos não foi reconhecido nos pares chave=valor.
+    */
+    if(strlen(username)*strlen(password)*strlen(newPassword)*strlen(newPasswordConfirm) == 0) {
+        if(authFd != -1) close(authFd);
+        join_paths(path, serverPagesPath, "error_cp_incomplete_content.html");
+        getFilename(path, filename);
+        if((*fd = open(path, O_RDONLY)) == -1)
+            return openAndReturnError(500, fd, filename); // Erro interno no servidor
+        return 400;
+    }
+
+    /*
+    Verifica se as duas nova senha coincidem
+    */
+    if(strcmp(newPassword, newPasswordConfirm) != 0) {
+        if(authFd != -1) close(authFd);
+        join_paths(path, serverPagesPath, "error_cp_different_new_passwords.html");
+        getFilename(path, filename);
+        if((*fd = open(path, O_RDONLY)) == -1)
+            return openAndReturnError(500, fd, filename); // Erro interno no servidor
+        return 400;
+    }
+
+    /*
+    Verifica se o usuário e senha bate com algum dos armazenados no arquivo htpassword aberto
+    */
+    if(!hasPermission(authFd, username, password)) {
+        close(authFd);
+        join_paths(path, serverPagesPath, "error_cp_unauthorized.html");
+        getFilename(path, filename);
+        if((*fd = open(path, O_RDONLY)) == -1)
+            return openAndReturnError(500, fd, filename); // Erro interno no servidor
+        return 400;
+    }
+
+    lseek(authFd, 0, SEEK_SET);
+
+    getLine(0, NULL, 1); // reseta o buffer auxiliar da função
+
+    /*
+    Encontra linha do usuário no arquivo
+    */
+    while(keepReading) {
+        keepReading = getLine(authFd, authBuffer, 0);
+        if(strncmp(username, authBuffer, strlen(username)) == 0) break;
+        position += strlen(authBuffer) + 1;
+    }
+
+    char *passwordAuth = authBuffer + strlen(username) + 1;
+
+    // Copia o salt da senha
+    for(i = 0; cifraoCount < 3 && ((c = passwordAuth[i]) != 0); i++) {
+        cripto_salt[i] = c;
+        if(c == '$') cifraoCount++;
+    }
+    cripto_salt[i] = 0;
+
+    // Caso não tenham '$'s na senha, então foi utilizada criptografia default
+    // Neste caso copia o salt, que são os dois primeiros caracteres da senha criptografada
+    if(cifraoCount == 0) {
+        cripto_salt[0] = passwordAuth[0];
+        cripto_salt[1] = passwordAuth[1];
+        cripto_salt[2] = 0;
+    }
+
+    /*
+    Gera a nova senha
+    */
+    newPasswordCripto = crypt(newPassword, cripto_salt);
+
+    printf("NOVA SENHA: [%s]\n", newPasswordCripto);
+
+    return openAndReturnError(500, fd, filename);
 }
