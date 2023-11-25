@@ -34,6 +34,12 @@ typedef struct {
 typedef thread_input_data* thread_input_data_ptr;
 
 /*
+aloca dinamicamente o espaco para armazenar uma copia da string str
+retorna o ponteiro para a string alocada.
+*/ 
+char* allocAndCopy(char* str);
+
+/*
 Aloca um comando na memoria, com command e options configurados pelos parametros
 o campo proximo eh configurado com NULL e o ponteiro para o comando eh retornado
 */

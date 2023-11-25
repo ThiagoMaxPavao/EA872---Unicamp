@@ -32,19 +32,3 @@ metodo      GET|HEAD|OPTIONS|TRACE|POST|PUT|DELETE
                 }
 [ \t]           ; // ignora tabulacao e espaco em branco
 %%
-// aloca dinamicamente o espaco para armazenar uma copia da string str
-// retorna o ponteiro para a string alocada.
-char* allocAndCopy(char* str) {
-	int len, i;
-	char* new;
-
-    for(; *str == ' '; str++); // pula espacos do comeco da string, se houverem
-	for(len = 0; str[len]!=0; len++); // descobre tamanho da string
-
-	new = malloc(len + 1); // aloca vetor de char do mesmo tamanho que a string
-						   // (mais um para colocar o \0)
-
-	for(i = 0; i<=len; i++) new[i] = str[i]; // copia a string
-	
-	return new;
-}
