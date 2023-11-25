@@ -9,8 +9,6 @@
 %}
 %START parametros
 metodo      GET|HEAD|OPTIONS|TRACE|POST|PUT|DELETE
-inicio      [.][/]http[-]dump.*
-recebida    Mensagem[ ]recebida[:]
 %%
 <parametros>[^,\t\n\r]* { // reconhece parametro, podendo conter espacos. Apenas funciona
                           //  neste modo apos reconhecer um separados de campos ':'
@@ -32,8 +30,6 @@ recebida    Mensagem[ ]recebida[:]
                     yylval.string = allocAndCopy(yytext);
                     return WORD; // comando ou parametro/opcao
                 }
-^{inicio}$      ;
-^{recebida}$    ; // ignora mensagens geradas pelo http-dump
 [ \t]           ; // ignora tabulacao e espaco em branco
 %%
 // aloca dinamicamente o espaco para armazenar uma copia da string str
