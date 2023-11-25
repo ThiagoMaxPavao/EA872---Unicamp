@@ -74,11 +74,9 @@
     #include "util.h"
 
     int yylex(void);        // para evitar erro do compilador gcc
-    int yyerror(char* s);   // para evitar erro do compilador gcc
+    int yyerror(p_no_command *comandos, char* s);   // para evitar erro do compilador gcc
 
-    p_no_command comandos = NULL; // inicializa lista de comandos
-
-#line 82 "sint.tab.c"
+#line 80 "sint.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -506,8 +504,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    27,    27,    33,    35,    36,    37,    38,    39,    40,
-      41,    43,    44,    46,    47
+       0,    25,    25,    31,    33,    34,    35,    36,    37,    38,
+      39,    41,    42,    44,    45
 };
 #endif
 
@@ -642,7 +640,7 @@ enum { YYENOMEM = -2 };
       }                                                           \
     else                                                          \
       {                                                           \
-        yyerror (YY_("syntax error: cannot back up")); \
+        yyerror (comandos, YY_("syntax error: cannot back up")); \
         YYERROR;                                                  \
       }                                                           \
   while (0)
@@ -675,7 +673,7 @@ do {                                                                      \
     {                                                                     \
       YYFPRINTF (stderr, "%s ", Title);                                   \
       yy_symbol_print (stderr,                                            \
-                  Kind, Value); \
+                  Kind, Value, comandos); \
       YYFPRINTF (stderr, "\n");                                           \
     }                                                                     \
 } while (0)
@@ -687,10 +685,11 @@ do {                                                                      \
 
 static void
 yy_symbol_value_print (FILE *yyo,
-                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep)
+                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, p_no_command *comandos)
 {
   FILE *yyoutput = yyo;
   YY_USE (yyoutput);
+  YY_USE (comandos);
   if (!yyvaluep)
     return;
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
@@ -705,12 +704,12 @@ yy_symbol_value_print (FILE *yyo,
 
 static void
 yy_symbol_print (FILE *yyo,
-                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep)
+                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, p_no_command *comandos)
 {
   YYFPRINTF (yyo, "%s %s (",
              yykind < YYNTOKENS ? "token" : "nterm", yysymbol_name (yykind));
 
-  yy_symbol_value_print (yyo, yykind, yyvaluep);
+  yy_symbol_value_print (yyo, yykind, yyvaluep, comandos);
   YYFPRINTF (yyo, ")");
 }
 
@@ -744,7 +743,7 @@ do {                                                            \
 
 static void
 yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp,
-                 int yyrule)
+                 int yyrule, p_no_command *comandos)
 {
   int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
@@ -757,7 +756,7 @@ yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp,
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr,
                        YY_ACCESSING_SYMBOL (+yyssp[yyi + 1 - yynrhs]),
-                       &yyvsp[(yyi + 1) - (yynrhs)]);
+                       &yyvsp[(yyi + 1) - (yynrhs)], comandos);
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -765,7 +764,7 @@ yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp,
 # define YY_REDUCE_PRINT(Rule)          \
 do {                                    \
   if (yydebug)                          \
-    yy_reduce_print (yyssp, yyvsp, Rule); \
+    yy_reduce_print (yyssp, yyvsp, Rule, comandos); \
 } while (0)
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
@@ -806,9 +805,10 @@ int yydebug;
 
 static void
 yydestruct (const char *yymsg,
-            yysymbol_kind_t yykind, YYSTYPE *yyvaluep)
+            yysymbol_kind_t yykind, YYSTYPE *yyvaluep, p_no_command *comandos)
 {
   YY_USE (yyvaluep);
+  YY_USE (comandos);
   if (!yymsg)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yykind, yyvaluep, yylocationp);
@@ -835,7 +835,7 @@ int yynerrs;
 `----------*/
 
 int
-yyparse (void)
+yyparse (p_no_command *comandos)
 {
     yy_state_fast_t yystate = 0;
     /* Number of tokens to shift before error messages enabled.  */
@@ -1077,84 +1077,84 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* linhas: linha linhas  */
-#line 27 "sint.y"
+#line 25 "sint.y"
                         {
                             if((yyvsp[-1].commandPointer) != NULL){
-                                (yyvsp[-1].commandPointer)->prox = comandos;
-                                comandos = (yyvsp[-1].commandPointer);
+                                (yyvsp[-1].commandPointer)->prox = *comandos;
+                                *comandos = (yyvsp[-1].commandPointer);
                             }
                         }
 #line 1088 "sint.tab.c"
     break;
 
   case 3: /* linhas: linha  */
-#line 33 "sint.y"
-              { comandos = (yyvsp[0].commandPointer); }
+#line 31 "sint.y"
+              { *comandos = (yyvsp[0].commandPointer); }
 #line 1094 "sint.tab.c"
     break;
 
   case 4: /* linha: COMMENT NEWLINE  */
-#line 35 "sint.y"
+#line 33 "sint.y"
                        { (yyval.commandPointer) = NULL; }
 #line 1100 "sint.tab.c"
     break;
 
   case 5: /* linha: WORD FIELD_SEPARATOR opcoes NEWLINE  */
-#line 36 "sint.y"
+#line 34 "sint.y"
                                            { (yyval.commandPointer) = criaComando((yyvsp[-3].string), (yyvsp[-1].optionList)); }
 #line 1106 "sint.tab.c"
     break;
 
   case 6: /* linha: WORD FIELD_SEPARATOR NEWLINE  */
-#line 37 "sint.y"
+#line 35 "sint.y"
                                     { (yyval.commandPointer) = criaComando((yyvsp[-2].string), NULL); }
 #line 1112 "sint.tab.c"
     break;
 
   case 7: /* linha: FIELD_SEPARATOR NEWLINE  */
-#line 38 "sint.y"
-                               { imprimeErroSemComando((yyvsp[0].number)); (yyval.commandPointer) = NULL; }
+#line 36 "sint.y"
+                               { (yyval.commandPointer) = NULL; }
 #line 1118 "sint.tab.c"
     break;
 
   case 8: /* linha: FIELD_SEPARATOR opcoes NEWLINE  */
-#line 39 "sint.y"
-                                      { imprimeErroSemComando((yyvsp[0].number)); liberaOpcoes((yyvsp[-1].optionList)); (yyval.commandPointer) = NULL; }
+#line 37 "sint.y"
+                                      { liberaOpcoes((yyvsp[-1].optionList)); (yyval.commandPointer) = NULL; }
 #line 1124 "sint.tab.c"
     break;
 
   case 9: /* linha: METODO opcoes-metodo NEWLINE  */
-#line 40 "sint.y"
+#line 38 "sint.y"
                                     { (yyval.commandPointer) = criaComando((yyvsp[-2].string), (yyvsp[-1].optionList)); }
 #line 1130 "sint.tab.c"
     break;
 
   case 10: /* linha: NEWLINE  */
-#line 41 "sint.y"
+#line 39 "sint.y"
                { (yyval.commandPointer) = NULL; }
 #line 1136 "sint.tab.c"
     break;
 
   case 11: /* opcoes: WORD OPTION_SEPARATOR opcoes  */
-#line 43 "sint.y"
+#line 41 "sint.y"
                                      { (yyval.optionList) = anexaParametro((yyvsp[0].optionList), (yyvsp[-2].string)); }
 #line 1142 "sint.tab.c"
     break;
 
   case 12: /* opcoes: WORD  */
-#line 44 "sint.y"
+#line 42 "sint.y"
              { (yyval.optionList) = anexaParametro(NULL, (yyvsp[0].string)); }
 #line 1148 "sint.tab.c"
     break;
 
   case 13: /* opcoes-metodo: WORD opcoes-metodo  */
-#line 46 "sint.y"
+#line 44 "sint.y"
                                   { (yyval.optionList) = anexaParametro((yyvsp[0].optionList), (yyvsp[-1].string)); }
 #line 1154 "sint.tab.c"
     break;
 
   case 14: /* opcoes-metodo: WORD  */
-#line 47 "sint.y"
+#line 45 "sint.y"
                     { (yyval.optionList) = anexaParametro(NULL, (yyvsp[0].string)); }
 #line 1160 "sint.tab.c"
     break;
@@ -1207,7 +1207,7 @@ yyerrlab:
   if (!yyerrstatus)
     {
       ++yynerrs;
-      yyerror (YY_("syntax error"));
+      yyerror (comandos, YY_("syntax error"));
     }
 
   if (yyerrstatus == 3)
@@ -1224,7 +1224,7 @@ yyerrlab:
       else
         {
           yydestruct ("Error: discarding",
-                      yytoken, &yylval);
+                      yytoken, &yylval, comandos);
           yychar = YYEMPTY;
         }
     }
@@ -1280,7 +1280,7 @@ yyerrlab1:
 
 
       yydestruct ("Error: popping",
-                  YY_ACCESSING_SYMBOL (yystate), yyvsp);
+                  YY_ACCESSING_SYMBOL (yystate), yyvsp, comandos);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -1318,7 +1318,7 @@ yyabortlab:
 | yyexhaustedlab -- YYNOMEM (memory exhaustion) comes here.  |
 `-----------------------------------------------------------*/
 yyexhaustedlab:
-  yyerror (YY_("memory exhausted"));
+  yyerror (comandos, YY_("memory exhausted"));
   yyresult = 2;
   goto yyreturnlab;
 
@@ -1333,7 +1333,7 @@ yyreturnlab:
          user semantic actions for why this is necessary.  */
       yytoken = YYTRANSLATE (yychar);
       yydestruct ("Cleanup: discarding lookahead",
-                  yytoken, &yylval);
+                  yytoken, &yylval, comandos);
     }
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYABORT or YYACCEPT.  */
@@ -1342,7 +1342,7 @@ yyreturnlab:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-                  YY_ACCESSING_SYMBOL (+*yyssp), yyvsp);
+                  YY_ACCESSING_SYMBOL (+*yyssp), yyvsp, comandos);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -1353,5 +1353,5 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 48 "sint.y"
+#line 46 "sint.y"
 

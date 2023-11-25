@@ -48,10 +48,6 @@ void imprimeComandos(p_no_command lista, int fd_resp, int fd_log) {
     }
 }
 
-void imprimeErroSemComando(int lineNumber) {
-    fprintf(stderr, "Linha %d sem comando!\n", lineNumber);
-}
-
 void liberaOpcoes(p_no_option lista) {
     while (lista != NULL) {
         p_no_option temp = lista;

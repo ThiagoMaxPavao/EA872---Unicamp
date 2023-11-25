@@ -68,14 +68,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 11 "sint.y"
+#line 10 "sint.y"
 
-    int number;
     char* string;
     p_no_option optionList;
     p_no_command commandPointer;
 
-#line 79 "sint.tab.h"
+#line 78 "sint.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -87,7 +86,7 @@ typedef union YYSTYPE YYSTYPE;
 extern YYSTYPE yylval;
 
 
-int yyparse (void);
+int yyparse (p_no_command *comandos);
 
 
 #endif /* !YY_YY_SINT_TAB_H_INCLUDED  */

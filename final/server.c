@@ -18,7 +18,7 @@
 
 extern p_no_command comandos; // lista de comandos
 extern void yy_scan_string(const char* string); // funcao que passa string para o analisador lexico
-extern int yyparse(void); // funcao que faz o parsing
+extern int yyparse(p_no_command *comandos); // funcao que faz o parsing
 int fd_log, socket_server;
 
 pthread_mutex_t count_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -54,7 +54,7 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     int closeConnection = 0;
     int parseStatus;
     int timeoutMs = 5000;
-    p_no_command comandos_local;
+    p_no_command comandos_local = NULL;
     Metodo metodo;
     
     /* Configura struct pollfd para realizar a chamada poll com o socket e evento de leitura */
@@ -85,9 +85,7 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     // REGIÃO CRÍTICA -> flex e bison utilizam variáveis globais
     pthread_mutex_lock(&parsing_mutex);
     yy_scan_string(request);
-    parseStatus = yyparse(); // realiza o parsing, montando a lista ligada
-    comandos_local = comandos; // copia lista ligada para varíavel local
-    comandos = NULL; // limpa lista global para poder ser utilizada por qualquer thread
+    parseStatus = yyparse(&comandos_local); // realiza o parsing, montando a lista ligada
     pthread_mutex_unlock(&parsing_mutex);
 
     contentLengthHeader = getParameter(comandos_local, "Content-Length");

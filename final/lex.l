@@ -6,8 +6,6 @@
 	int yylex(void);        // para evitar erro do compilador gcc 
 	int yyerror(char* s);   // para evitar erro do compilador gcc
 	char* allocAndCopy(char* str); // funcao para copiar string para espaco alocado dinamicamente
-
-	int lineCounter = 0; // contador da linha para avisar onde nao existe comando
 %}
 %START parametros
 metodo      GET|HEAD|OPTIONS|TRACE|POST|PUT|DELETE
@@ -28,7 +26,6 @@ recebida    Mensagem[ ]recebida[:]
                 }
 [\n\r]          {
                     BEGIN 0; // volta ao modo normal de execucao a cada incio de nova linha
-                    yylval.number = ++lineCounter; // returns number of current line
                     return NEWLINE;
                 }
 [^ \t\n\r:,]+   {

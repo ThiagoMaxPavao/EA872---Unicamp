@@ -573,11 +573,9 @@ char *yytext;
 	int yylex(void);        // para evitar erro do compilador gcc 
 	int yyerror(char* s);   // para evitar erro do compilador gcc
 	char* allocAndCopy(char* str); // funcao para copiar string para espaco alocado dinamicamente
+#line 577 "lex.yy.c"
 
-	int lineCounter = 0; // contador da linha para avisar onde nao existe comando
 #line 579 "lex.yy.c"
-
-#line 581 "lex.yy.c"
 
 #define INITIAL 0
 #define parametros 1
@@ -798,9 +796,9 @@ YY_DECL
 		}
 
 	{
-#line 16 "lex.l"
+#line 14 "lex.l"
 
-#line 804 "lex.yy.c"
+#line 802 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -860,7 +858,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 17 "lex.l"
+#line 15 "lex.l"
 { // reconhece parametro, podendo conter espacos. Apenas funciona
                           //  neste modo apos reconhecer um separados de campos ':'
                             yylval.string = allocAndCopy(yytext);
@@ -869,22 +867,22 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 22 "lex.l"
+#line 20 "lex.l"
 { return COMMENT; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 23 "lex.l"
+#line 21 "lex.l"
 { BEGIN parametros; return FIELD_SEPARATOR; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 24 "lex.l"
+#line 22 "lex.l"
 { return OPTION_SEPARATOR; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 25 "lex.l"
+#line 23 "lex.l"
 {
                     yylval.string = allocAndCopy(yytext);
                     return METODO; // metodo reconhecido
@@ -893,16 +891,15 @@ YY_RULE_SETUP
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 29 "lex.l"
+#line 27 "lex.l"
 {
                     BEGIN 0; // volta ao modo normal de execucao a cada incio de nova linha
-                    yylval.number = ++lineCounter; // returns number of current line
                     return NEWLINE;
                 }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 34 "lex.l"
+#line 31 "lex.l"
 {
                     yylval.string = allocAndCopy(yytext);
                     return WORD; // comando ou parametro/opcao
@@ -913,7 +910,7 @@ case 8:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 38 "lex.l"
+#line 35 "lex.l"
 ;
 	YY_BREAK
 case 9:
@@ -921,20 +918,20 @@ case 9:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 39 "lex.l"
+#line 36 "lex.l"
 ; // ignora mensagens geradas pelo http-dump
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 40 "lex.l"
+#line 37 "lex.l"
 ; // ignora tabulacao e espaco em branco
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 41 "lex.l"
+#line 38 "lex.l"
 ECHO;
 	YY_BREAK
-#line 938 "lex.yy.c"
+#line 935 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(parametros):
 	yyterminate();
@@ -1943,7 +1940,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 41 "lex.l"
+#line 38 "lex.l"
 
 // aloca dinamicamente o espaco para armazenar uma copia da string str
 // retorna o ponteiro para a string alocada.
