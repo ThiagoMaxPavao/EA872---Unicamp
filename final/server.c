@@ -27,6 +27,8 @@ pthread_mutex_t parsing_mutex = PTHREAD_MUTEX_INITIALIZER;
 int N_threads;     // maximo de threads executando simultaneamente
 int n_threads = 0; // contador de threads em execução
 
+char *changePasswordFilename;
+
 /*
 Interage com o socket definido por socket_msg, esperando que haja conteúdo para ser lido nele e realizando a leitura da requisição.
 Esta requisição é então respondida, acessando os arquivos do diretório webspace.
@@ -109,6 +111,7 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     dprintf(fd_log, "----- Response Header -----\n"); // formatacao do logfile
 
     if(parseStatus == 1) {
+        liberaComandos(comandos_local); // Libera memória que pode ter sido alocada
         cabecalho(400, "close", filename, NULL, -1, socket_msg, fd_log); // Bad Request
         return -2;
     }
@@ -145,7 +148,7 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
         case OPTIONS:
         url = comandos_local->options->option;
         dupPrintf(socket_msg, fd_log, "HTTP/1.1 200 OK\r\n");
-        dupPrintf(socket_msg, fd_log, stringEndsWith(url, "change_password.html") ? 
+        dupPrintf(socket_msg, fd_log, stringEndsWith(url, changePasswordFilename) ? 
         "Allow: GET, HEAD, POST, OPTIONS, TRACE\r\n" : "Allow: GET, HEAD, OPTIONS, TRACE\r\n");
         cabecalho(-1, connectionState, filename, NULL, -1, socket_msg, fd_log);
         break;
@@ -253,8 +256,8 @@ int main(int argc, char *argv[]) {
     pthread_t tid;
     
     /* Verifica formato da chamada */
-    if(argc != 5 && argc != 6) {
-        printf("Uso: %s <Web Space> <Porta> <Arquivo de Log> <Max threads> [charset (opcional)]\n", argv[0]);
+    if(argc != 6 && argc != 7) {
+        printf("Uso: %s <Web Space> <Porta> <Arquivo de Log> <URL de troca de senha> <Max threads> [charset (opcional)]\n", argv[0]);
         exit(1);
     }
 
@@ -268,8 +271,9 @@ int main(int argc, char *argv[]) {
     webspace = argv[1];
     portNumber = atoi(argv[2]);
     logFilename = argv[3];
-    N_threads = atoi(argv[4]);
-    if(argc == 6) configureCharset(argv[5]);
+    changePasswordFilename = argv[4];
+    N_threads = atoi(argv[5]);
+    if(argc == 7) configureCharset(argv[6]);
 
     /* Abre o arquivo de log, indicando se houver erro */
     if((fd_log = open(logFilename, O_APPEND | O_CREAT | O_WRONLY, 0600)) == -1) {

@@ -6,7 +6,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static char serverPagesPath[100];
+static char serverPagesPath[100]; // Caminho para o script, para obter as páginas do servidor
+extern char *changePasswordFilename; // Nome para ser reconhecido na URL para a funcionalidade de troca de senha
 
 void configureServerPagesPath(char *programPath) {
     int i, j;
@@ -69,7 +70,7 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
     Verifica se o recurso solicitado é o formulário de troca de senha
     Só verifica se o recurso for protegido.
     */
-    if(authStatus && stringEndsWith(resource, "change_password.html")) {
+    if(authStatus && stringEndsWith(resource, changePasswordFilename)) {
         join_paths(path, serverPagesPath, "change_password.html");
         getFilename(path, filename);
         if((*fd = open(path, O_RDONLY)) == -1)
@@ -173,7 +174,7 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
     int i;
     int cifraoCount = 0;
 
-    if(!stringEndsWith(resource, "change_password.html")) {
+    if(!stringEndsWith(resource, changePasswordFilename)) {
         return openAndReturnError(405, fd, filename); // POST sem ser para troca de senha
                                                       // retorn erro 405 - Method Not Allowed
     }

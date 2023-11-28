@@ -443,18 +443,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  15
+#define YYFINAL  11
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   22
+#define YYLAST   19
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  9
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  5
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  14
+#define YYNRULES  12
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  25
+#define YYNSTATES  21
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   263
@@ -504,8 +504,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    25,    25,    31,    33,    34,    35,    36,    37,    38,
-      39,    41,    42,    44,    45
+       0,    25,    25,    31,    33,    34,    35,    36,    37,    39,
+      40,    42,    43
 };
 #endif
 
@@ -533,7 +533,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-11)
+#define YYPACT_NINF (-6)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -547,9 +547,9 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,     0,     2,   -11,     8,     6,    14,    -3,   -11,   -11,
-      10,    11,     4,     6,    12,   -11,   -11,     9,   -11,   -11,
-      13,   -11,   -11,   -11,   -11
+      -3,     0,    -6,     3,     1,     9,    -3,    -6,    -5,     1,
+       4,    -6,    -6,    -6,     6,     7,    -6,    -6,     5,    -6,
+      -6
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -557,21 +557,21 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,    10,     0,     0,     0,     3,     4,     7,
-      12,     0,     0,    14,     0,     1,     2,     0,     8,     6,
-       0,    13,     9,    11,     5
+       0,     0,     8,     0,     0,     0,     3,     4,     0,    12,
+       0,     1,     2,     6,    10,     0,    11,     7,     0,     5,
+       9
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -11,    15,   -11,   -10,     7
+      -6,     8,    -6,    -2,    10
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     6,     7,    11,    14
+       0,     5,     6,    15,    10
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -579,39 +579,37 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       1,     2,    20,     3,     4,     5,     8,    23,     9,    10,
-      19,    10,    12,    13,    15,    17,    10,    18,    22,    24,
-      21,     0,    16
+       1,    13,    14,     2,     3,     4,     7,     8,     9,    11,
+      17,    18,    14,    19,    12,     0,    20,     0,     0,    16
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,     4,    12,     6,     7,     8,     6,    17,     6,     7,
-       6,     7,     4,     7,     0,     5,     7,     6,     6,     6,
-      13,    -1,     7
+       3,     6,     7,     6,     7,     8,     6,     4,     7,     0,
+       6,     5,     7,     6,     6,    -1,    18,    -1,    -1,     9
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     4,     6,     7,     8,    10,    11,     6,     6,
-       7,    12,     4,     7,    13,     0,    10,     5,     6,     6,
-      12,    13,     6,    12,     6
+       0,     3,     6,     7,     8,    10,    11,     6,     4,     7,
+      13,     0,    10,     6,     7,    12,    13,     6,     5,     6,
+      12
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,     9,    10,    10,    11,    11,    11,    11,    11,    11,
-      11,    12,    12,    13,    13
+       0,     9,    10,    10,    11,    11,    11,    11,    11,    12,
+      12,    13,    13
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     2,     1,     2,     4,     3,     2,     3,     3,
-       1,     3,     1,     2,     1
+       0,     2,     2,     1,     2,     4,     3,     3,     1,     3,
+       1,     2,     1
 };
 
 
@@ -1084,83 +1082,71 @@ yyreduce:
                                 *comandos = (yyvsp[-1].commandPointer);
                             }
                         }
-#line 1088 "sint.tab.c"
+#line 1086 "sint.tab.c"
     break;
 
   case 3: /* linhas: linha  */
 #line 31 "sint.y"
               { *comandos = (yyvsp[0].commandPointer); }
-#line 1094 "sint.tab.c"
+#line 1092 "sint.tab.c"
     break;
 
   case 4: /* linha: COMMENT NEWLINE  */
 #line 33 "sint.y"
                        { (yyval.commandPointer) = NULL; }
-#line 1100 "sint.tab.c"
+#line 1098 "sint.tab.c"
     break;
 
   case 5: /* linha: WORD FIELD_SEPARATOR opcoes NEWLINE  */
 #line 34 "sint.y"
                                            { (yyval.commandPointer) = criaComando((yyvsp[-3].string), (yyvsp[-1].optionList)); }
-#line 1106 "sint.tab.c"
+#line 1104 "sint.tab.c"
     break;
 
   case 6: /* linha: WORD FIELD_SEPARATOR NEWLINE  */
 #line 35 "sint.y"
                                     { (yyval.commandPointer) = criaComando((yyvsp[-2].string), NULL); }
-#line 1112 "sint.tab.c"
+#line 1110 "sint.tab.c"
     break;
 
-  case 7: /* linha: FIELD_SEPARATOR NEWLINE  */
+  case 7: /* linha: METODO opcoes-metodo NEWLINE  */
 #line 36 "sint.y"
-                               { (yyval.commandPointer) = NULL; }
-#line 1118 "sint.tab.c"
-    break;
-
-  case 8: /* linha: FIELD_SEPARATOR opcoes NEWLINE  */
-#line 37 "sint.y"
-                                      { liberaOpcoes((yyvsp[-1].optionList)); (yyval.commandPointer) = NULL; }
-#line 1124 "sint.tab.c"
-    break;
-
-  case 9: /* linha: METODO opcoes-metodo NEWLINE  */
-#line 38 "sint.y"
                                     { (yyval.commandPointer) = criaComando((yyvsp[-2].string), (yyvsp[-1].optionList)); }
-#line 1130 "sint.tab.c"
+#line 1116 "sint.tab.c"
     break;
 
-  case 10: /* linha: NEWLINE  */
-#line 39 "sint.y"
+  case 8: /* linha: NEWLINE  */
+#line 37 "sint.y"
                { (yyval.commandPointer) = NULL; }
-#line 1136 "sint.tab.c"
+#line 1122 "sint.tab.c"
     break;
 
-  case 11: /* opcoes: WORD OPTION_SEPARATOR opcoes  */
-#line 41 "sint.y"
+  case 9: /* opcoes: WORD OPTION_SEPARATOR opcoes  */
+#line 39 "sint.y"
                                      { (yyval.optionList) = anexaParametro((yyvsp[0].optionList), (yyvsp[-2].string)); }
-#line 1142 "sint.tab.c"
+#line 1128 "sint.tab.c"
     break;
 
-  case 12: /* opcoes: WORD  */
-#line 42 "sint.y"
+  case 10: /* opcoes: WORD  */
+#line 40 "sint.y"
              { (yyval.optionList) = anexaParametro(NULL, (yyvsp[0].string)); }
-#line 1148 "sint.tab.c"
+#line 1134 "sint.tab.c"
     break;
 
-  case 13: /* opcoes-metodo: WORD opcoes-metodo  */
-#line 44 "sint.y"
+  case 11: /* opcoes-metodo: WORD opcoes-metodo  */
+#line 42 "sint.y"
                                   { (yyval.optionList) = anexaParametro((yyvsp[0].optionList), (yyvsp[-1].string)); }
-#line 1154 "sint.tab.c"
+#line 1140 "sint.tab.c"
     break;
 
-  case 14: /* opcoes-metodo: WORD  */
-#line 45 "sint.y"
+  case 12: /* opcoes-metodo: WORD  */
+#line 43 "sint.y"
                     { (yyval.optionList) = anexaParametro(NULL, (yyvsp[0].string)); }
-#line 1160 "sint.tab.c"
+#line 1146 "sint.tab.c"
     break;
 
 
-#line 1164 "sint.tab.c"
+#line 1150 "sint.tab.c"
 
       default: break;
     }
@@ -1353,5 +1339,5 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 46 "sint.y"
+#line 44 "sint.y"
 

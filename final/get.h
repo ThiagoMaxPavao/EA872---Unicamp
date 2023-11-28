@@ -25,9 +25,9 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
 /*
 Processa a requisição de POST, retorna o status da resposta, e possivelmente uma página em fd.
 Funciona seguindo os passos a seguir.
- - Verifica se o post está sendo feito em um URL que termine em change_password.html,
-   se não estiver retorna status 405, pois o POST foi feito em um URL inválido.
-   se estiver continua.
+ - Verifica se o post está sendo feito em um URL que termine em changePasswordFilename (enviado 
+   como parametro para o programa), se não estiver retorna status 405, pois o POST foi feito em 
+   um URL inválido. Se estiver continua.
  - Verifica que o diretório possui restrição de acesso com algum .htaccess,
    verifica diretórios mais acima até alcançar a raíz, continuando se achar qualquer htacess.
    Se não encontrar nenhum, então o diretório está em uma sub árvore desprotegida e o servidor
