@@ -15,14 +15,12 @@
 #include <pthread.h>
 #include "base64.h"
 #include "get.h"
+#include "sint.tab.h"
+#include "lex.yy.h"
 
-extern p_no_command comandos; // lista de comandos
-extern void yy_scan_string(const char* string); // funcao que passa string para o analisador lexico
-extern int yyparse(p_no_command *comandos); // funcao que faz o parsing
 int fd_log, socket_server;
 
 pthread_mutex_t count_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t parsing_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int N_threads;     // maximo de threads executando simultaneamente
 int n_threads = 0; // contador de threads em execução
@@ -58,6 +56,7 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     int timeoutMs = 5000;
     p_no_command comandos_local = NULL;
     Metodo metodo;
+    yyscan_t scanner;
     
     /* Configura struct pollfd para realizar a chamada poll com o socket e evento de leitura */
     struct pollfd fds;
@@ -84,11 +83,10 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     char *headerEnd = strstr(request, "\r\n\r\n");
     headerEnd[2] = 0; // coloca o finalizador da string de request
 
-    // REGIÃO CRÍTICA -> flex e bison utilizam variáveis globais
-    pthread_mutex_lock(&parsing_mutex);
-    yy_scan_string(request);
-    parseStatus = yyparse(&comandos_local); // realiza o parsing, montando a lista ligada
-    pthread_mutex_unlock(&parsing_mutex);
+    yylex_init(&scanner);
+    yy_scan_string(request, scanner);
+    parseStatus = yyparse(scanner, &comandos_local); // realiza o parsing, montando a lista ligada
+    yylex_destroy(scanner);
 
     contentLengthHeader = getParameter(comandos_local, "Content-Length");
     contentLength = contentLengthHeader == NULL ? 0 : atoi(contentLengthHeader);

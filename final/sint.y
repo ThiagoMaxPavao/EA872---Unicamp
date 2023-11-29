@@ -1,12 +1,20 @@
-%{
+%define api.pure full
+%param { yyscan_t scanner }
+%parse-param {p_no_command *comandos}
+
+%code top {
     #include <stdlib.h> // para alocacao dinamica de memoria
     #include <stdio.h>
     #include "util.h"
+}
+%code requires {
+    typedef void* yyscan_t;
+}
+%code {
+  int yylex(YYSTYPE* yylvalp, yyscan_t scanner);
+  void yyerror(yyscan_t unused, p_no_command *comandos, const char* msg);
+}
 
-    int yylex(void);        // para evitar erro do compilador gcc
-    int yyerror(p_no_command *comandos, char* s);   // para evitar erro do compilador gcc
-%}
-%parse-param {p_no_command *comandos}
 %union {
     char* string;
     p_no_option optionList;
