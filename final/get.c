@@ -5,6 +5,7 @@
 #include "util.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
 
 static char serverPagesPath[100]; // Caminho para o script, para obter as páginas do servidor
 extern char *changePasswordFilename; // Nome para ser reconhecido na URL para a funcionalidade de troca de senha
@@ -94,6 +95,8 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
     join_paths(path, webspace, resource);
 
     if(stat(path, &statbuf) == -1) {
+        if(errno == EACCES) // Algum diretório sem permissão de execução
+            return openAndReturnError(403, fd, filename);
         return openAndReturnError(404, fd, filename); // Recurso não encontrado - 404 Not Found
     }
 
