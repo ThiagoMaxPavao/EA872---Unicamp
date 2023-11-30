@@ -11,6 +11,8 @@
 #include "base64.h"
 #include <crypt.h>
 
+static char serverPasswordsPath[100];
+
 char* allocAndCopy(char* str) {
 	int len, i;
 	char* new;
@@ -316,6 +318,18 @@ int hasAuthentication(char* webspace, char* resource_parameter, int* authFd) {
     if(password_path[n_read - 1] = '\n') n_read--;
     password_path[n_read] = 0;
 
+    /*
+    Verifica se o endereço é relativo, neste caso acessa relativo à pasta
+    passwords no mesmo diretório do programa.
+    */
+    if(password_path[0] != '/') {
+        strcpy(aux_path, password_path);
+        join_paths(password_path, serverPasswordsPath, aux_path);
+    }
+
+    /*
+    Abre o arquivo de senhas obtido
+    */
     if((*authFd = open(password_path, O_RDWR)) == -1) {
         return -1;
     }
@@ -439,4 +453,24 @@ int hasPermissionByBase64(int authFd, char *authBase64) {
     free(decodedAuth);
 
     return hasPermission(authFd, user, password);
+}
+
+void configurePathRelativeToProgram(char* destination, char *programPath, char *prefix) {
+    int i, j;
+    strcpy(destination, programPath);
+    for(i = 0; destination[i] != 0; i++);
+    for(; i>=0 && destination[i] != '/'; i--);
+    
+    if(i == 0) {
+        printf("\nCaminho do programa não identificado, encerrando execução...\n");
+        exit(1);
+    }
+
+    for(j = 0; prefix[j] != 0; j++)
+        destination[++i] = prefix[j];
+    destination[++i] = 0;
+}
+
+void configurePasswordFilesPath(char *programPath) {
+    configurePathRelativeToProgram(serverPasswordsPath, programPath, "passwords");
 }

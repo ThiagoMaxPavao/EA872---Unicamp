@@ -175,3 +175,17 @@ Retorna 1 se o usuário for reconhecido e tiver autenticação,
 Retorna 0 se não reconhecer o usuário.
 */
 int hasPermissionByBase64(int authFd, char* authBase64);
+
+/*
+Configura na variável destination o caminho para uma pasta 
+relativa ao caminho do programa. Também adiciona o que for enviado 
+como prefix ao fim de destination. Por exemplo, se programPath = './webserver/server'
+e prefix = 'server_pages', teremos destination = './webserver/server_pages'
+*/
+void configurePathRelativeToProgram(char* destination, char *programPath, char *prefix);
+
+/*
+Configura a variável serverPasswordsPath do módulo utilizando o caminho do programa,
+este pode ser obtido através de argv[0].
+*/
+void configurePasswordFilesPath(char *programPath);

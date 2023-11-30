@@ -266,6 +266,7 @@ int main(int argc, char *argv[]) {
         Realiza a leitura dos parâmetros
     */
     configureServerPagesPath(argv[0]);
+    configurePasswordFilesPath(argv[0]);
     webspace = argv[1];
     portNumber = atoi(argv[2]);
     logFilename = argv[3];

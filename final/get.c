@@ -11,20 +11,7 @@ static char serverPagesPath[100]; // Caminho para o script, para obter as págin
 extern char *changePasswordFilename; // Nome para ser reconhecido na URL para a funcionalidade de troca de senha
 
 void configureServerPagesPath(char *programPath) {
-    int i, j;
-    char folder[] = "server_pages";
-    strcpy(serverPagesPath, programPath);
-    for(i = 0; serverPagesPath[i] != 0; i++);
-    for(; i>=0 && serverPagesPath[i] != '/'; i--);
-    
-    if(i == 0) {
-        printf("\nCaminho do programa não identificado, encerrando execução...\n");
-        exit(1);
-    }
-
-    for(j = 0; folder[j] != 0; j++)
-        serverPagesPath[++i] = folder[j];
-    serverPagesPath[++i] = 0;
+    configurePathRelativeToProgram(serverPagesPath, programPath, "server_pages");
 }
 
 int openAndReturnError(int status, int* fd, char* filename) {
@@ -56,7 +43,7 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
     if(!isPathConfined(resource)) {
         return openAndReturnError(403, fd, filename); // Fora do webspace - 403 Forbidden
     }
-    
+
     if(stringEndsWith(resource, ".htaccess")) {
         return openAndReturnError(403, fd, filename); // Tentativa de acessso ao .htaccess - 403 Forbidden
     }
