@@ -56,6 +56,10 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
     if(!isPathConfined(resource)) {
         return openAndReturnError(403, fd, filename); // Fora do webspace - 403 Forbidden
     }
+    
+    if(stringEndsWith(resource, ".htaccess")) {
+        return openAndReturnError(403, fd, filename); // Tentativa de acessso ao .htaccess - 403 Forbidden
+    }
 
     // Verifica se o recurso é protegido
     authStatus = hasAuthentication(webspace, resource, &authFd);
@@ -230,7 +234,10 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
     /*
     Verifica se algum dos campos não foi reconhecido nos pares chave=valor.
     */
-    if(strlen(username)*strlen(password)*strlen(newPassword)*strlen(newPasswordConfirm) == 0) {
+    if(strlen(username) == 0 || 
+       strlen(password) == 0 ||
+       strlen(newPassword) == 0 ||
+       strlen(newPasswordConfirm) == 0) {
         if(authFd != -1) close(authFd);
         join_paths(path, serverPagesPath, "error_cp_incomplete_content.html");
         getFilename(path, filename);
