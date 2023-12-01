@@ -340,9 +340,10 @@ int hasAuthentication(char* webspace, char* resource_parameter, int* authFd) {
     close(htaccessFd);
 
     // Terminador de string
-    if(password_path[n_read - 1] = '\n') n_read--;
+    if(password_path[n_read - 1] == '\n') n_read--;
+    if(password_path[n_read - 1] == '\r') n_read--;
     password_path[n_read] = 0;
-
+    
     /*
     Verifica se o endereço é relativo, neste caso acessa relativo à pasta
     passwords no mesmo diretório do programa.
