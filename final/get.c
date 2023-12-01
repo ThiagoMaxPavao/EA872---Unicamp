@@ -157,7 +157,8 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
     char newPasswordConfirm[127] = "";
     char content[512];
     const char token_separators[3] = "&=";
-    char authBuffer[200];
+    char authBuffer[100];
+    char getLineAuxBuffer[200] = "";
     char cripto_salt[127];
     char *newPasswordCripto;
     int keepReading = 1;
@@ -167,6 +168,7 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
     char *token, c;
     int i;
     int cifraoCount = 0;
+    int lineSize;
 
     if(!stringEndsWith(resource, changePasswordFilename)) {
         return openAndReturnError(405, fd, filename); // POST sem ser para troca de senha
@@ -259,15 +261,12 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
 
     lseek(authFd, 0, SEEK_SET);
 
-    getLine(0, NULL, 1); // reseta o buffer auxiliar da função
-
     /*
     Encontra linha do usuário no arquivo
     */
-    while(keepReading) {
-        keepReading = getLine(authFd, authBuffer, 0);
+    while((lineSize = getLine(authFd, authBuffer, getLineAuxBuffer, 200)) >= 0) {
         if(strncmp(username, authBuffer, strlen(username)) == 0) break;
-        position += strlen(authBuffer) + 1;
+        position += lineSize;
     }
 
     char *passwordAuth = authBuffer + strlen(username) + 1;

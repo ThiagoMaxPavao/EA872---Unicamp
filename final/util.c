@@ -362,48 +362,45 @@ int hasAuthentication(char* webspace, char* resource_parameter, int* authFd) {
     return 1;
 }
 
-int getLine(int fd, char* buffer, int resetBuffer) {
-    static char auxBuffer[200];
+int getLine(int fd, char* buffer, char *auxBuffer, int auxBufferSize) {
     int n_read, i, j;
-
-    if(resetBuffer) {
-        for(i = 0; i<sizeof(auxBuffer); i++) auxBuffer[i] = 0;
-        return 0;
-    }
+    int lineSize;
 
     if (auxBuffer[0] == 0) { // buffer vazio
-        n_read = read(fd, auxBuffer, sizeof(auxBuffer) - 1);
+        n_read = read(fd, auxBuffer, auxBufferSize - 1);
+        if(n_read == 0) return -1; // fim do arquivo
         auxBuffer[n_read] = 0;
     } else {
-        for (i = 0; auxBuffer[i] != 0 && auxBuffer[i] != '\n'; i++);
+        for (i = 0; auxBuffer[i] != 0 && auxBuffer[i] != '\r' && auxBuffer[i] != '\n'; i++);
         if (auxBuffer[i] == 0) { // buffer sem uma linha completa
-            n_read = read(fd, auxBuffer + i, sizeof(auxBuffer) - i - 1);
+            n_read = read(fd, auxBuffer + i, auxBufferSize - i - 1);
             auxBuffer[n_read + i] = 0;
         }
     }
 
     // aqui, com certeza há pelo menos uma linha no buffer.
     // basta copiá-la e depois trazer os caracteres restantes para o começo do buffer
-    for (i = 0; auxBuffer[i] != 0 && auxBuffer[i] != '\n'; i++);
+    for (i = 0; auxBuffer[i] != 0 && auxBuffer[i] != '\r' && auxBuffer[i] != '\n'; i++);
 
-    if (auxBuffer[i] == 0) { // só há essa linha e nada mais, fim do arquivo
-        strcpy(buffer, auxBuffer);
-        return 0;
-    } else {
-        auxBuffer[i] = 0;
-        strcpy(buffer, auxBuffer);
-        for (j = i + 1; auxBuffer[j] != 0; j++)
-            auxBuffer[j - (i + 1)] = auxBuffer[j];
-        auxBuffer[j - (i + 1)] = 0;
-        return 1;
-    }
+    lineSize = i;
+    if(auxBuffer[lineSize] == '\r') lineSize++;
+    if(auxBuffer[lineSize] == '\n') lineSize++;
+
+    auxBuffer[i] = 0;
+    strcpy(buffer, auxBuffer);
+    for (j = lineSize; auxBuffer[j] != 0; j++)
+        auxBuffer[j - lineSize] = auxBuffer[j];
+    auxBuffer[j - lineSize] = 0;
+
+    return lineSize;
 }
 
 int hasPermission(int authFd, char *user, char *password) {
     char userAuth[127], passwordAuth[127];
     char cripto_salt[127];
     char *passwordCripto;
-    char authBuffer[200];
+    char authBuffer[100];
+    char getLineAuxBuffer[200] = "";
     char c;
     int n_read;
     int userFound = 0;
@@ -411,11 +408,8 @@ int hasPermission(int authFd, char *user, char *password) {
     int i;
     int cifraoCount = 0;
 
-    getLine(0, NULL, 1); // reseta o buffer auxiliar da função
-
     // percorre usuarios do arquivo até achar o correspondente
-    while(keepReading && !userFound) {
-        keepReading = getLine(authFd, authBuffer, 0);
+    while((getLine(authFd, authBuffer, getLineAuxBuffer, 200) >= 0) && !userFound) {
         if(strlen(authBuffer) == 0) continue; // ignora linhas em branco
 
         // encontra o caractere de separação ':'

@@ -156,10 +156,14 @@ Se ocorrer erro na abertura de algum arquivo retorna -1.
 int hasAuthentication(char* webspace, char* resource, int* authFd);
 
 /*
-Retorna uma linha de fd em buffer,
-Retorna 0 se tiver terminado o arquivo e 1 se ainda houver mais coisas para ler nele
+Retorna uma linha de fd em buffer, precisa de um vetor auxiliar com pelo menos o
+dobro do tamanho maximo de uma linha para poder ler o arquivo aos poucos. O que
+importa para quem chama a função é buffer, auxBuffer é utilizado apenas internamente.
+Retorna o número de bytes da linha que foi retornada em buffer.
+Retorna um número negativo quando não há mais linhas a retornar (Nesta chamada nenhuma
+linha é retornada).
 */
-int getLine(int fd, char* buffer, int resetBuffer);
+int getLine(int fd, char* buffer, char *auxBuffer, int auxBufferSize);
 
 /*
 Recebe o arquivo contendo os pares de usuario:senha,
