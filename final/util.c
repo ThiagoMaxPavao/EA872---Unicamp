@@ -95,49 +95,71 @@ Metodo stringParaMetodo(char* str) {
     return INVALID;
 }
 
-static char  textHtmlContentType[30] = "text/html";
-static char   textCssContentType[30] = "text/css";
-static char   textTxtContentType[30] = "text/txt";
-static char textPlainContentType[30] = "text/plain";
-
-void configureCharset(char *charset) {
-    char aux[20] = "; charset=";
-    strcat(aux, charset);
-    strcat(textHtmlContentType, aux);
-    strcat(textCssContentType, aux);
-    strcat(textTxtContentType, aux);
-    strcat(textPlainContentType, aux);
-}
+static char *extToContentTypeTable[] = {
+    "bin:application/octet-stream",
+    "css:text/css",
+    "gif:image/gif",
+    "htm:text/html",
+    "html:text/html",
+    "jpeg:image/jpeg",
+    "jpg:image/jpeg",
+    "js:text/javascript",
+    "json:application/json",
+    "mp3:audio/mpeg",
+    "mp4:video/mp4",
+    "png:image/png",
+    "pdf:application/pdf",
+    "rar:application/vnd.rar",
+    "sh:application/x-sh",
+    "svg:image/svg+xml",
+    "tar:application/x-tar",
+    "tif:image/tiff",
+    "tiff:image/tiff",
+    "txt:text/plain",
+    "zip:application/zip",
+    NULL
+};
 
 /*
-Retorna uma string para o valor de Content-Type da resposta baseando-se no nome do arquivo
-Faz a verificação de acordo com o nome do arquivo.
+Recebe o nome do arquivo e, a partir de sua extensão, retorna uma string
+contendo o Content-Type base, sem o tipo de codificação.
 */
-char* getContentType(char* filename) {
+char *getContentTypeBase(char *filename) {
     char* ext = strrchr(filename, '.');
+    int i, extLength;
+    char *currentType;
 
     if(ext) {
         ext++; // pula o ponto
-        if(strcmp(ext, "html") == 0) {
-            return textHtmlContentType;
-        } else if(strcmp(ext, "css") == 0) {
-            return textCssContentType;
-        } else if(strcmp(ext, "txt") == 0) {
-            return textTxtContentType;
-        } else if(strcmp(ext, "js") == 0) {
-            return "application/javascript";
-        } else if(strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0) {
-            return "image/jpeg";
-        } else if(strcmp(ext, "gif") == 0) {
-            return "image/gif";
-        } else if(strcmp(ext, "png") == 0) {
-            return "image/png";
-        } else if(strcmp(ext, "pdf") == 0) {
-            return "application/pdf";
-        } 
+        extLength = strlen(ext);
+
+        for(i = 0; (currentType = extToContentTypeTable[i]) != NULL; i++) {
+            if(currentType[extLength] != ':') continue;
+            if(strncmp(currentType, ext, extLength) != 0) continue;
+            return currentType + extLength + 1;
+        }
     }
 
-    return textPlainContentType; // Padrão
+    return "text/plain";
+}
+
+static char *charset = NULL;
+
+void configureCharset(char *charset_param) {
+    charset = charset_param;
+}
+
+/*
+Escreve em output a string contendo o valor para enviar com o header Content-Type
+Suporta multiplos tipos de arquivos, e adiciona "; charset=<charset configurado>"
+Se o arquivo for do tipo texto e o tipo de codificao tiver sido configurado.
+*/
+char* getContentType(char *output, char* filename) {
+    strcpy(output, getContentTypeBase(filename));
+    if(charset != NULL && strncmp(output, "text", 4) == 0) {
+        strcat(output, "; charset=");
+        strcat(output, charset);
+    }
 }
 
 /*
@@ -161,7 +183,8 @@ char* getStatusText(int status) {
 
 void cabecalho(int status, char *connection, char *filename, char *realm, int fd, int fd_resp, int fd_log) {
     time_t timer;
-    char dateBuffer[30];
+    char dateBuffer[32];
+    char contentTypeBuffer[32];
     struct tm* tm_info;
 
     /* Constroi a data atual */
@@ -188,7 +211,9 @@ void cabecalho(int status, char *connection, char *filename, char *realm, int fd
         dupPrintf(fd_resp, fd_log, "Last-Modified: %s\r\n", dateBuffer);
 
         dupPrintf(fd_resp, fd_log, "Content-Length: %ld\r\n",statbuf.st_size);
-        dupPrintf(fd_resp, fd_log, "Content-Type: %s\r\n", getContentType(filename));
+        
+        getContentType(contentTypeBuffer, filename);
+        dupPrintf(fd_resp, fd_log, "Content-Type: %s\r\n", contentTypeBuffer);
     }
     else {
         dupPrintf(fd_resp, fd_log, "Content-Length: 0\r\n");

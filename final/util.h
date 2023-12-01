@@ -81,7 +81,8 @@ Retorna INVALID (da enumeração) se a string não coincidir com nenhum dos mét
 Metodo stringParaMetodo(char* str);
 
 /*
-Configura as variáveis retornadas por getContentType para incluir o tipo de codificação.
+Seta a variável charset com o endereço informado, se isto é feito então a string
+é utilizada para montar o Content-Type de arquivos do tipo text
 */
 void configureCharset(char *charset);
 

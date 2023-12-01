@@ -255,7 +255,7 @@ int main(int argc, char *argv[]) {
     
     /* Verifica formato da chamada */
     if(argc != 6 && argc != 7) {
-        printf("Uso: %s <Web Space> <Porta> <Arquivo de Log> <URL de troca de senha> <Max threads> [charset]\n", argv[0]);
+        printf("Uso: %s <Web Space> <Porta> <Arquivo de Log> <URL de troca de senha> <Max threads> [charset (tipo de codificacao)]\n", argv[0]);
         exit(1);
     }
 
