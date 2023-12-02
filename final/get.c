@@ -250,7 +250,7 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
     /*
     Verifica se o usuário e senha bate com algum dos armazenados no arquivo htpassword aberto
     */
-    if(!hasPermission(authFd, username, password)) {
+    if(!hasPermission(authFd, username, password, cripto_salt, &position)) {
         close(authFd);
         join_paths(path, serverPagesPath, "error_cp_unauthorized.html");
         getFilename(path, filename);
@@ -259,35 +259,8 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
         return 400;
     }
 
-    lseek(authFd, 0, SEEK_SET);
-
     /*
-    Encontra linha do usuário no arquivo
-    */
-    while((lineSize = getLine(authFd, authBuffer, getLineAuxBuffer, 200)) >= 0) {
-        if(strncmp(username, authBuffer, strlen(username)) == 0) break;
-        position += lineSize;
-    }
-
-    char *passwordAuth = authBuffer + strlen(username) + 1;
-
-    // Copia o salt da senha
-    for(i = 0; cifraoCount < 3 && ((c = passwordAuth[i]) != 0); i++) {
-        cripto_salt[i] = c;
-        if(c == '$') cifraoCount++;
-    }
-    cripto_salt[i] = 0;
-
-    // Caso não tenham '$'s na senha, então foi utilizada criptografia default
-    // Neste caso copia o salt, que são os dois primeiros caracteres da senha criptografada
-    if(cifraoCount == 0) {
-        cripto_salt[0] = passwordAuth[0];
-        cripto_salt[1] = passwordAuth[1];
-        cripto_salt[2] = 0;
-    }
-
-    /*
-    Gera a nova senha
+    Tem permissão -> Gera a nova senha
     */
     newPasswordCripto = crypt(newPassword, cripto_salt);
 

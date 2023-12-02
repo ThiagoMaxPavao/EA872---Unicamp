@@ -170,8 +170,14 @@ Recebe o arquivo contendo os pares de usuario:senha,
 o usuario e a senha que se deseja verificar.
 Retorna 1 se o usuário for reconhecido e tiver autenticação,
 Retorna 0 se não reconhecer o usuário.
+Recebe tambem um endereco de um buffer para salvar o sal de criptografia e um ponteiro
+para um inteiro, que armazena a posicao no arquivo do comeco da linha em que se encontra
+o usuario que foi encontrado. Isso é usado para que seja possível sobreescrever a senha.
+Esses dois ultimos parametros podem ser enviados como NULL, caso nao o chamador não
+tenha interesse nos valores retornados. Os valores só são utilizados caso seja necessario
+fazer uma alteração na senha.
 */
-int hasPermission(int authFd, char *user, char *password);
+int hasPermission(int authFd, char *user, char *password, char *cripto_salt_output, int *position_output);
 
 /*
 Recebe o arquivo contendo os pares de usuario:senha e

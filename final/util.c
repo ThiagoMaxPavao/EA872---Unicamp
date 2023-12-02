@@ -14,18 +14,18 @@
 static char serverPasswordsPath[100];
 
 char* allocAndCopy(char* str) {
-	int len, i;
-	char* new;
+    int len, i;
+    char* new;
 
     for(; *str == ' '; str++); // pula espacos do comeco da string, se houverem
-	for(len = 0; str[len]!=0; len++); // descobre tamanho da string
+    for(len = 0; str[len]!=0; len++); // descobre tamanho da string
 
-	new = malloc(len + 1); // aloca vetor de char do mesmo tamanho que a string
-						   // (mais um para colocar o \0)
+    new = malloc(len + 1); // aloca vetor de char do mesmo tamanho que a string
+                           // (mais um para colocar o \0)
 
-	for(i = 0; i<=len; i++) new[i] = str[i]; // copia a string
-	
-	return new;
+    for(i = 0; i<=len; i++) new[i] = str[i]; // copia a string
+    
+    return new;
 }
 
 p_no_command criaComando(char* command, p_no_option options) {
@@ -396,7 +396,7 @@ int getLine(int fd, char* buffer, char *auxBuffer, int auxBufferSize) {
     return lineSize;
 }
 
-int hasPermission(int authFd, char *user, char *password) {
+int hasPermission(int authFd, char *user, char *password, char *cripto_salt_output, int *position_output) {
     char userAuth[127], passwordAuth[127];
     char cripto_salt[127];
     char *passwordCripto;
@@ -408,9 +408,12 @@ int hasPermission(int authFd, char *user, char *password) {
     int keepReading = 1;
     int i;
     int cifraoCount = 0;
+    int position = 0;
+    int lineSize;
 
     // percorre usuarios do arquivo até achar o correspondente
-    while((getLine(authFd, authBuffer, getLineAuxBuffer, 200) >= 0) && !userFound) {
+    while(((lineSize = getLine(authFd, authBuffer, getLineAuxBuffer, 200)) >= 0) && !userFound) {
+        position += lineSize;
         if(strlen(authBuffer) == 0) continue; // ignora linhas em branco
 
         // encontra o caractere de separação ':'
@@ -420,7 +423,10 @@ int hasPermission(int authFd, char *user, char *password) {
         authBuffer[i] = 0;
         strcpy(userAuth, authBuffer);
         strcpy(passwordAuth, authBuffer + i + 1);
-        if(strcmp(userAuth, user) == 0) userFound = 1;
+        if(strcmp(userAuth, user) == 0) {
+            userFound = 1;
+            position -= lineSize;
+        }
     }
 
     // nome de usuario não encontrado
@@ -449,6 +455,12 @@ int hasPermission(int authFd, char *user, char *password) {
     // e a senha informada pelo cliente da requisição.
     if(!strcmp(passwordAuth, passwordCripto) == 0) return 0; // senha inválida
 
+    /*
+    Seta parametros de saida com os valores esperados
+    */
+    if(position_output != NULL) *position_output = position;
+    if(cripto_salt_output != NULL) strcpy(cripto_salt_output, cripto_salt);
+
     return 1; // usuario autorizado
 }
 
@@ -472,7 +484,7 @@ int hasPermissionByBase64(int authFd, char *authBase64) {
     strcpy(password, decodedAuthPassword);
     free(decodedAuth);
 
-    return hasPermission(authFd, user, password);
+    return hasPermission(authFd, user, password, NULL, NULL);
 }
 
 void configurePathRelativeToProgram(char* destination, char *programPath, char *prefix) {
