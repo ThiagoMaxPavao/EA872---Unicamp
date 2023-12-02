@@ -244,7 +244,7 @@ void respostaPadraoOcupado(char *webspace, int socket_msg, int fd_log) {
 int main(int argc, char *argv[]) {
     int socket_msg;
     struct sockaddr_in server, client;
-    int addr_size = sizeof(client);
+    unsigned int addr_size = sizeof(client);
     char *webspace, *logFilename;
     int portNumber;
     pthread_attr_t attr;
@@ -353,8 +353,8 @@ int main(int argc, char *argv[]) {
         data->webspace = webspace;
         data->socket_msg = socket_msg;
         data->fd_log = fd_log;
-        if(rc = pthread_create(&tid, &attr, HandleConnection, (void *)data)) {
-            printf("\nERRO: codigo de retorno de pthread_create é %d \n", rc);
+        if((rc = pthread_create(&tid, &attr, HandleConnection, (void *)data)) != 0) {
+            printf("\nERRO: codigo de retorno de pthread_create é %d\n", rc);
             exit(1);
         }
 

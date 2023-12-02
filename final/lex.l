@@ -1,11 +1,11 @@
 %option reentrant bison-bridge
 
 %{
-	#include <stdlib.h> // para alocacao dinamica de memoria
-	#include "util.h"
-	#include "sint.tab.h"
+    #include <stdlib.h> // para alocacao dinamica de memoria
+    #include "util.h"
+    #include "sint.tab.h"
     
-	char* allocAndCopy(char* str); // funcao para copiar string para espaco alocado dinamicamente
+    char* allocAndCopy(char* str); // funcao para copiar string para espaco alocado dinamicamente
 %}
 %START parametros
 metodo      GET|HEAD|OPTIONS|TRACE|POST|PUT|DELETE

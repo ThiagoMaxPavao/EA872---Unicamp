@@ -157,18 +157,12 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
     char newPasswordConfirm[127] = "";
     char content[512];
     const char token_separators[3] = "&=";
-    char authBuffer[100];
-    char getLineAuxBuffer[200] = "";
     char cripto_salt[127];
     char *newPasswordCripto;
-    int keepReading = 1;
     int authStatus;
     int authFd = -1;
     int position = 0;
-    char *token, c;
-    int i;
-    int cifraoCount = 0;
-    int lineSize;
+    char *token;
 
     if(!stringEndsWith(resource, changePasswordFilename)) {
         return openAndReturnError(405, fd, filename); // POST sem ser para troca de senha

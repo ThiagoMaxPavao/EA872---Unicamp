@@ -154,7 +154,7 @@ Escreve em output a string contendo o valor para enviar com o header Content-Typ
 Suporta multiplos tipos de arquivos, e adiciona "; charset=<charset configurado>"
 Se o arquivo for do tipo texto e o tipo de codificao tiver sido configurado.
 */
-char* getContentType(char *output, char* filename) {
+void getContentType(char *output, char* filename) {
     strcpy(output, getContentTypeBase(filename));
     if(charset != NULL && strncmp(output, "text", 4) == 0) {
         strcat(output, "; charset=");
@@ -226,7 +226,7 @@ void cabecalho(int status, char *connection, char *filename, char *realm, int fd
 
 int imprimeConteudo(int destinationFd, int originFd) {
     char buffer[50];
-    char bufferCorrigido[2*sizeof(buffer)]; // potencialmente completo de quebras de linha sozinhas
+    
     int n; // n -> numero de bytes lidos por read
     while((n = read(originFd, buffer, sizeof(buffer))) > 0) {
         write(destinationFd, buffer, n);
@@ -403,9 +403,7 @@ int hasPermission(int authFd, char *user, char *password, char *cripto_salt_outp
     char authBuffer[100];
     char getLineAuxBuffer[200] = "";
     char c;
-    int n_read;
     int userFound = 0;
-    int keepReading = 1;
     int i;
     int cifraoCount = 0;
     int position = 0;
