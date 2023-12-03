@@ -14,11 +14,15 @@ int openAndReturnError(int status, int* fd, char* filename);
 /*
 Acessa webspace/resource no sistema de arquivos e abre o arquivo
 o file descriptor é armazenado no endereco fd.
-Retorna o código de erro, se tiver ocorrido, ou 200 se tudo ocorreu bem. (status)
+Retorna o código de erro, se tiver ocorrido, ou 200 se tudo ocorreu bem.
 Também procura um arquivo index.html ou welcome.html se webspace/resource for um diretório.
-Retorna o file descriptor desses arquivos nesses casos, se forem encontrados.
+Retorna o file descriptor desses arquivos nesses casos no parâmetro fd, se forem encontrados.
 Se ocorrer erro, chama openAndReturnError e retorna o status. Caso exista o arquivo
 error_{status}.html, ele é aberto e retornado.
+Verifica se o recurso é protegido por algum .htaccess, no mesmo diretório ou em algum
+diretório pai. Neste caso procura o arquivo requisitado apenas se o usuário enviou 
+autenticação correta.
+Em filename retorna o nome do arquivo aberto.
 */
 int get(char* webspace, char* resource, int* fd, char* filename, char* authBase64);
 

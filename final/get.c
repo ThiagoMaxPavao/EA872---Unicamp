@@ -8,7 +8,12 @@
 #include <errno.h>
 
 static char serverPagesPath[100]; // Caminho para o script, para obter as páginas do servidor
-extern char *changePasswordFilename; // Nome para ser reconhecido na URL para a funcionalidade de troca de senha
+
+/*
+Nome para ser reconhecido na URL para a funcionalidade de troca de senha
+Externo pois pertence ao arquivo util.c
+*/
+extern char *changePasswordFilename; 
 
 void configureServerPagesPath(char *programPath) {
     configurePathRelativeToProgram(serverPagesPath, programPath, "server_pages");
@@ -60,7 +65,8 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
 
     /*
     Verifica se o recurso solicitado é o formulário de troca de senha
-    Só verifica se o recurso for protegido.
+    Só verifica se o recurso for protegido, pois se não for não faz sentido
+    trocar a senha -> Fora de diretório protegido.
     */
     if(authStatus && stringEndsWith(resource, changePasswordFilename)) {
         join_paths(path, serverPagesPath, "change_password.html");
@@ -85,12 +91,14 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
     /* Cria o caminho completo do recurso desejado */
     join_paths(path, webspace, resource);
 
+    /* Pega inforamções sobre o recurso, verifica erro */
     if(stat(path, &statbuf) == -1) {
         if(errno == EACCES) // Algum diretório sem permissão de execução
             return openAndReturnError(403, fd, filename);
         return openAndReturnError(404, fd, filename); // Recurso não encontrado - 404 Not Found
     }
 
+    /* Verifica permissão de leitura */
     if(access(path, R_OK) != 0) {
         return openAndReturnError(403, fd, filename); // Sem permissão de leitura - 403 Forbidden
     }
@@ -103,14 +111,14 @@ int get(char* webspace, char* resource, int* fd, char* filename, char* authBase6
         return 200;
     }
 
-    /* Confirma que é um diretório */
+    /* Não é um arquivo -> Confirma que é um diretório */
     if((statbuf.st_mode & S_IFMT) != S_IFDIR) {
         return openAndReturnError(500, fd, filename); // Erro interno no servidor
     }
 
     /* Verifica permissão de varredura no diretório (bit X) */
     if(access(path, X_OK) != 0) {
-        return openAndReturnError(403, fd, filename); // Sem permissão de leitura - 403 Forbidden
+        return openAndReturnError(403, fd, filename); // Sem permissão de execução - 403 Forbidden
     }
 
     /*
@@ -164,22 +172,23 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
     int position = 0;
     char *token;
 
+    /* Verifica local da requisição POST, só aceira na URL de troca de senha */
     if(!stringEndsWith(resource, changePasswordFilename)) {
         return openAndReturnError(405, fd, filename); // POST sem ser para troca de senha
                                                       // retorn erro 405 - Method Not Allowed
     }
     
-    // Verifica se o recurso é protegido
+    /* Verifica se o recurso é protegido */
     authStatus = hasAuthentication(webspace, resource, &authFd);
 
-    // Erro na abertura de .htaccess ou .htpassword
+    /* Erro na abertura de .htaccess ou .htpassword */
     if(authStatus < 0) {
         printf("Ocorreu um erro ao executar hasAuthentication,\nPossivelmente na abertura de .htaccess ou .htpassword.\n");
         if(authFd != -1) close(authFd);
         return openAndReturnError(500, fd, filename); // Erro interno no servidor
     }
 
-    // Diretório sem proteção -> Bad Request, não faz sentido alterar a senha.
+    /* Diretório sem proteção -> Bad Request, não faz sentido alterar a senha. */
     if(authStatus == 0) {
         if(authFd != -1) close(authFd);
         join_paths(path, serverPagesPath, "error_cp_unprotected_directory.html");
@@ -189,8 +198,8 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
         return 400;
     }
 
+    /* Copia corpo para variável local, para tokenzinar e encontrar os campos */
     strcpy(content, requestContent);
-
     token = strtok(content, token_separators);
 
     /*
@@ -206,7 +215,11 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
 
         if(currentField != NULL) {
             token = strtok(NULL, token_separators);
+            
+            /* Copia valor para variável correspondente */
             strcpy(currentField, token);
+
+            /* Substitui cada + por um espaço */
             for(int i = 0; currentField[i] != 0; i++)
                 if(currentField[i] == '+') currentField[i] = ' ';
         }
@@ -214,9 +227,7 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
         token = strtok(NULL, token_separators);
     }
 
-    /*
-    Verifica se algum dos campos não foi reconhecido nos pares chave=valor.
-    */
+    /* Verifica se algum dos campos não foi reconhecido nos pares chave=valor. */
     if(strlen(username) == 0 || 
        strlen(password) == 0 ||
        strlen(newPassword) == 0 ||
@@ -229,9 +240,7 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
         return 400;
     }
 
-    /*
-    Verifica se as duas nova senha coincidem
-    */
+    /* Verifica se as duas nova senha coincidem */
     if(strcmp(newPassword, newPasswordConfirm) != 0) {
         if(authFd != -1) close(authFd);
         join_paths(path, serverPagesPath, "error_cp_different_new_passwords.html");
@@ -253,20 +262,14 @@ int processPost(char* webspace, char* resource, int* fd, char* filename, char *r
         return 400;
     }
 
-    /*
-    Tem permissão -> Gera a nova senha
-    */
+    /* Tem permissão -> Gera a nova senha */
     newPasswordCripto = crypt(newPassword, cripto_salt);
 
-    /*
-    Sobreescreve a antiga no arquivo
-    */
+    /* Sobreescreve a antiga no arquivo */
     lseek(authFd, position + strlen(username) + 1, SEEK_SET);
     write(authFd, newPasswordCripto, strlen(newPasswordCripto));
 
-    /*
-    Retorna página de sucesso
-    */
+    /* Retorna página de sucesso */
     close(authFd);
     join_paths(path, serverPagesPath, "change_password_success.html");
     getFilename(path, filename);
