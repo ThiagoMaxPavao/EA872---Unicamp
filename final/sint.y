@@ -11,8 +11,9 @@
     typedef void* yyscan_t;
 }
 %code {
-  int yylex(YYSTYPE* yylvalp, yyscan_t scanner);
-  void yyerror(yyscan_t unused, p_no_command *comandos, const char* msg);
+    // Para evitar erro na compilação
+    int yylex(YYSTYPE* yylvalp, yyscan_t scanner);
+    void yyerror(yyscan_t unused, p_no_command *comandos, const char* msg);
 }
 
 %union {

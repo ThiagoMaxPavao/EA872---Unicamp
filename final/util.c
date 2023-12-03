@@ -197,6 +197,7 @@ void cabecalho(int status, char *connection, char *filename, char *realm, int fd
     dupPrintf(fd_resp, fd_log, "Date: %s\r\n", dateBuffer);
     dupPrintf(fd_resp, fd_log, "Server: Servidor HTTP ver. 0.1 de Thiago Maximo Pavao\r\n");
     if(status == 401) {
+        /* Envia cabeçalho requisitando autenticação, caso status = 401 Authorization Required*/
         dupPrintf(fd_resp, fd_log, "WWW-Authenticate: Basic realm=\"%s\"\r\n", realm);
     }
     dupPrintf(fd_resp, fd_log, "Connection: %s\r\n", connection);
@@ -217,6 +218,7 @@ void cabecalho(int status, char *connection, char *filename, char *realm, int fd
         dupPrintf(fd_resp, fd_log, "Content-Type: %s\r\n", contentTypeBuffer);
     }
     else {
+        /* Não há arquivo sendo enviado */
         dupPrintf(fd_resp, fd_log, "Content-Length: 0\r\n");
         dupPrintf(fd_resp, fd_log, "Content-Type: text/html\r\n");
     }
@@ -309,14 +311,16 @@ int hasAuthentication(char* webspace, char* resource_parameter, int* authFd) {
     int find = 0;
     int n_read;
 
-    // copia recurso desejado para array local
+    /* copia recurso desejado para array local */
     strcpy(resource, resource_parameter);
 
-    // inicializa resourceEnd, encontrando o caractere nulo.
+    /* inicializa resourceEnd, encontrando o caractere nulo. */
     for(resourceEnd = resource; *resourceEnd != 0; resourceEnd++);
 
-    // procura o arquivo htaccess, começando do diretório mais próximo do recurso pedido
-    // e voltando, até encontrá-lo ou chegar na raiz.
+    /*
+    procura o arquivo htaccess, começando do diretório mais próximo do recurso pedido
+    e voltando, até encontrá-lo ou chegar na raiz.
+    */
     while(!find && resourceEnd != resource) {
         // monta o caminho do arquivo htaccess
         join_paths(aux_path, webspace, resource);
@@ -330,17 +334,18 @@ int hasAuthentication(char* webspace, char* resource_parameter, int* authFd) {
         *resourceEnd = 0;
     }
 
+    /* Não encontrou nenhum .htaccess na árvore do recurso, recurso livre */
     if(!find) return 0;
 
     if((htaccessFd = open(htaccess_path, O_RDONLY)) == -1) {
         return -1;
     }
 
-    // Lê o caminho para o arquivo de senhas
+    /* Lê o caminho para o arquivo de senhas */
     n_read = read(htaccessFd, password_path, sizeof(password_path) - 1);
     close(htaccessFd);
 
-    // Terminador de string
+    /* Terminador de string removendo possível quebra de linha */
     if(password_path[n_read - 1] == '\n') n_read--;
     if(password_path[n_read - 1] == '\r') n_read--;
     password_path[n_read] = 0;
@@ -354,9 +359,7 @@ int hasAuthentication(char* webspace, char* resource_parameter, int* authFd) {
         join_paths(password_path, serverPasswordsPath, aux_path);
     }
 
-    /*
-    Abre o arquivo de senhas obtido
-    */
+    /* Abre o arquivo de senhas obtido */
     if((*authFd = open(password_path, O_RDWR)) == -1) {
         return -1;
     }
@@ -410,28 +413,30 @@ int hasPermission(int authFd, char *user, char *password, char *cripto_salt_outp
     int position = 0;
     int lineSize;
 
-    // percorre usuarios do arquivo até achar o correspondente
+    /* percorre usuarios do arquivo até achar o correspondente */
     while(((lineSize = getLine(authFd, authBuffer, getLineAuxBuffer, 200)) >= 0) && !userFound) {
         position += lineSize;
         if(strlen(authBuffer) == 0) continue; // ignora linhas em branco
 
-        // encontra o caractere de separação ':'
+        /* encontra o caractere de separação ':' */
         for(i = 0; authBuffer[i] != ':' && authBuffer[i] != 0; i++);
         if(authBuffer[i] == 0) continue;
 
         authBuffer[i] = 0;
         strcpy(userAuth, authBuffer);
         strcpy(passwordAuth, authBuffer + i + 1);
+
+        /* Verifica se o usuário é o que foi informado */
         if(strcmp(userAuth, user) == 0) {
             userFound = 1;
             position -= lineSize;
         }
     }
 
-    // nome de usuario não encontrado
+    /* nome de usuario não encontrado */
     if(!userFound) return 0;
 
-    // Copia o salt da senha
+    /* Copia o salt da senha */
     for(i = 0; cifraoCount < 3 && ((c = passwordAuth[i]) != 0); i++) {
         cripto_salt[i] = c;
         if(c == '$') cifraoCount++;
@@ -447,6 +452,7 @@ int hasPermission(int authFd, char *user, char *password, char *cripto_salt_outp
         cripto_salt[2] = 0;
     }
 
+    /* Criptografa a senha informada utilizando o sal da armazenada no hypassword */
     passwordCripto = crypt(password, cripto_salt);
 
     // compara passwordAuth -> vindo do arquivo de senhas com passwordCripto ->
@@ -454,9 +460,7 @@ int hasPermission(int authFd, char *user, char *password, char *cripto_salt_outp
     // e a senha informada pelo cliente da requisição.
     if(!strcmp(passwordAuth, passwordCripto) == 0) return 0; // senha inválida
 
-    /*
-    Seta parametros de saida com os valores esperados
-    */
+    /* Seta parametros de saída com os valores esperados */
     if(position_output != NULL) *position_output = position;
     if(cripto_salt_output != NULL) strcpy(cripto_salt_output, cripto_salt);
 
@@ -469,11 +473,11 @@ int hasPermissionByBase64(int authFd, char *authBase64) {
     char *decodedAuth;
     size_t decodedAuthSize;
 
-    // decodifica autenticacao enviada, formato user:password
+    /* decodifica autenticacao enviada, formato user:password */
     decodedAuth = base64_decode(authBase64, strlen(authBase64), &decodedAuthSize);
     decodedAuth[decodedAuthSize] = 0;
 
-    // separa os valores user e password em suas variáveis
+    /* separa os valores user e password em suas variáveis */
     for(decodedAuthPassword = decodedAuth; (*decodedAuthPassword != ':') &&
                                            (*decodedAuthPassword != 0); decodedAuthPassword++);
     if(*decodedAuthPassword == 0) return 0;
@@ -488,6 +492,8 @@ int hasPermissionByBase64(int authFd, char *authBase64) {
 
 void configurePathRelativeToProgram(char* destination, char *programPath, char *prefix) {
     int i, j;
+
+    /* Isola o caminho utilizado para rodar o comando */
     strcpy(destination, programPath);
     for(i = 0; destination[i] != 0; i++);
     for(; i>=0 && destination[i] != '/'; i--);
@@ -497,6 +503,7 @@ void configurePathRelativeToProgram(char* destination, char *programPath, char *
         exit(1);
     }
 
+    /* Adiciona prefixo informado. Ex: nome de uma pasta no mesmo diretório do programa */
     for(j = 0; prefix[j] != 0; j++)
         destination[++i] = prefix[j];
     destination[++i] = 0;
