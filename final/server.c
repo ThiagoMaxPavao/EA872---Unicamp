@@ -36,7 +36,8 @@ Vale destacar que a função realiza todas as ações relacionadas a responder u
 
 Retorno:
 0: Tudo OK, manter conexão
--1: timeout atingido, requisição não enviada dentro do período aceitável de timeout
+-1: requisição não enviada dentro do período aceitável de timeout
+    ou erro de sintaxe no parsing do cabeçalho da requisição.
 1: Requisição respondida com sucesso. Fechar a conexão.
 
 Este último caso ocorre quando o cliente envia no cabecalho da requisição o campo Connection: close ou quando detecta-se erro na
@@ -68,7 +69,8 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     identificada pela terminação de duas quebras de linha seguidas 
     */
     do {
-        ready = poll(&fds, 1, timeoutMs); // que seja possível ler o socket, esperando no maximo por timeoutMs millisegundos
+        // aguarda que seja possível ler o socket, esperando no maximo por timeoutMs millisegundos
+        ready = poll(&fds, 1, timeoutMs);
 
         if(ready <= 0) return -1; // código de erro para indicar que conexão aberta não enviou conteúdo
 
@@ -88,12 +90,21 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     parseStatus = yyparse(scanner, &comandos_local); // realiza o parsing, montando a lista ligada
     yylex_destroy(scanner);
 
+    /* Verifica o parâmetro Content-Length para saber se a requisição conta com corpo */
     contentLengthHeader = getParameter(comandos_local, "Content-Length");
     contentLength = contentLengthHeader == NULL ? 0 : atoi(contentLengthHeader);
     if(contentLength != 0) {
         strcpy(content, headerEnd+4);
         bytesRead = strlen(content);
-        read(socket_msg, content + bytesRead, contentLength - bytesRead);
+        
+        while(bytesRead < contentLength) {
+            // aguarda que seja possível ler o socket, esperando no maximo por timeoutMs millisegundos
+            ready = poll(&fds, 1, timeoutMs);
+            
+            if(ready <= 0) return -1; // código de erro para indicar que conexão aberta não enviou conteúdo
+
+            bytesRead += read(socket_msg, content + bytesRead, contentLength - bytesRead);
+        }
     }
 
     /* Imprime Requisição recebida na tela e no arquivo de log */
@@ -188,8 +199,12 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
 
 /*
 Função da thread, atende as requisições de uma conexão até que ela seja encerrada
+Recebe dados na forma da struct thread_input_data_ptr, contendo o endereço do
+webspace, o socket da conexão e o descritor para o arquivo de log.
 */
 void * HandleConnection(void * data) {
+
+    /* Coleta os dados enviados */
     thread_input_data_ptr typed_data = (thread_input_data_ptr) data;
     char *webspace = typed_data->webspace;
     int socket_msg = typed_data->socket_msg;
@@ -203,6 +218,8 @@ void * HandleConnection(void * data) {
         indicando que a conexão deve ser fechada
     */
     while(processRequest(webspace, socket_msg, fd_log) == 0);
+
+    /* Fecha a conexão */
     close(socket_msg);
     printf("\nThread %ld encerrando, socket %d\n", pthread_self(), socket_msg);
 
@@ -211,6 +228,7 @@ void * HandleConnection(void * data) {
     n_threads--;
     pthread_mutex_unlock(&count_mutex);
 
+    /* Encerra a thread */
     pthread_exit(NULL);
 }
 
@@ -218,7 +236,7 @@ void closeServer() {
     printf("\nDesligando servidor e saindo...\n");
 
     base64_cleanup(); // libera tabela de (de)codificação base64
-    close(socket_server); // Fecha servidor
+    close(socket_server); // Fecha servidor, libera porta
     close(fd_log); // Fecha arquivo de log
     exit(0);
 }
@@ -259,12 +277,10 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    // Inicializa tabela para (de)codificação base64.
+    /* Inicializa tabela para (de)codificação base64. */
     build_decoding_table();
 
-    /*
-        Realiza a leitura dos parâmetros
-    */
+    /* Realiza a leitura dos parâmetros */
     configureServerPagesPath(argv[0]);
     configurePasswordFilesPath(argv[0]);
     webspace = argv[1];
@@ -286,15 +302,21 @@ int main(int argc, char *argv[]) {
         exit(3);
     }
 
+    /* Configura server */
     server.sin_family = AF_INET;
     server.sin_port = htons(portNumber);
     server.sin_addr.s_addr = INADDR_ANY;
 
+    /*
+    Associa o nome configurado em server (número da porta) ao
+    descritor de arquivo do socket.
+    */
     if(bind(socket_server, (struct sockaddr*)&server, sizeof(server)) == -1) {
         perror("Erro em bind");
         exit(4);
     }
 
+    /* Escuta conexões no socket, até 5 são armazenadas em fila */
     if(listen(socket_server, 5) == -1) {
         perror("Erro em listen");
         exit(5);
@@ -320,16 +342,17 @@ int main(int argc, char *argv[]) {
     printf("Servidor iniciado e ouvindo na porta %d\n", portNumber);
 
     while(1) {
+        /* Espera até que algum cliente se conecte */
         socket_msg = accept(socket_server, (struct sockaddr*)&client, &addr_size);
         
-        if(socket_msg == -1) {
+        if(socket_msg == -1) { // Verifica erro na saída de accept
             if(errno == EINTR) {
                 printf("\naccept interrompido por algum sinal, executando novamente...\n");
                 continue; // se saiu do accept por causa de interrupcao, volta no comeco do loop
             }
             else {
                 perror("Erro em accept");
-                exit(1);
+                exit(1); // Se saiu por outro erro encerra a execução
             }
         }
 
@@ -342,20 +365,23 @@ int main(int argc, char *argv[]) {
         }
         pthread_mutex_unlock(&count_mutex);
 
-        if(ocupado) {
+        if(ocupado) { // resposta padrão e volta para esperar novas requisições
             respostaPadraoOcupado(webspace, socket_msg, fd_log);
             close(socket_msg);
-            continue; // volta para esperar novas requisições
+            continue;
         }
 
-        // Configura dados de passagem para a thread
+        /* Configura dados de passagem para a thread */
         data = malloc(sizeof(thread_input_data));
         data->webspace = webspace;
         data->socket_msg = socket_msg;
         data->fd_log = fd_log;
+
+        /* Cria thread para atender ao cliente, verifica erro na criação */
         if((rc = pthread_create(&tid, &attr, HandleConnection, (void *)data)) != 0) {
-            printf("\nERRO: codigo de retorno de pthread_create é %d\n", rc);
-            exit(1);
+            printf("Erro ao criar thread: codigo de retorno de pthread_create é %d\n", rc);
+            close(socket_msg); // Encerra a conexão
+            continue;
         }
 
     }
