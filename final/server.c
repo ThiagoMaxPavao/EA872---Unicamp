@@ -90,10 +90,22 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     parseStatus = yyparse(scanner, &comandos_local); // realiza o parsing, montando a lista ligada
     yylex_destroy(scanner);
 
+    /* Imprime cabeçalho da requisição recebida na tela e no arquivo de log */
+    printf("Requisição recebida por thread %ld:\n%s\n", pthread_self(), request);
+
+    dprintf(fd_log, "\n\n\n----- Request Header - Thread = %ld -----\n", pthread_self()); // formatacao do logfile
+    dprintf(fd_log, "%s\n", request);
+
     /* Verifica o parâmetro Content-Length para saber se a requisição conta com corpo */
     contentLengthHeader = getParameter(comandos_local, "Content-Length");
     contentLength = contentLengthHeader == NULL ? 0 : atoi(contentLengthHeader);
-    if(contentLength != 0) {
+
+    if(contentLength > sizeof(content)) { // corpo grande demais
+        liberaComandos(comandos_local); // Libera memória que pode ter sido alocada
+        cabecalho(413, "close", filename, NULL, -1, socket_msg, fd_log); // Payload Too Large
+        return -1;
+    }
+    else if(contentLength > 0) {
         strcpy(content, headerEnd+4);
         bytesRead = strlen(content);
         
@@ -105,24 +117,19 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
 
             bytesRead += read(socket_msg, content + bytesRead, contentLength - bytesRead);
         }
-    }
 
-    /* Imprime Requisição recebida na tela e no arquivo de log */
-    printf("Requisição recebida por thread %ld:\n%s\n", pthread_self(), request);
-    if(contentLength != 0) printf("Corpo da requisição:\n%s\n", content);
-
-    dprintf(fd_log, "\n\n\n----- Request Header - Thread = %ld -----\n", pthread_self()); // formatacao do logfile
-    dprintf(fd_log, "%s\n", request);
-    if(contentLength != 0) {
+        printf("Corpo da requisição:\n%s\n", content);
+        
         dprintf(fd_log, "----- Request Content - Thread = %ld -----\n", pthread_self()); // formatacao do logfile
         dprintf(fd_log, "%s\n\n", content);
     }
+
     dprintf(fd_log, "----- Response Header -----\n"); // formatacao do logfile
 
     if(parseStatus == 1) {
         liberaComandos(comandos_local); // Libera memória que pode ter sido alocada
         cabecalho(400, "close", filename, NULL, -1, socket_msg, fd_log); // Bad Request
-        return -2;
+        return -1;
     }
 
     /* 
