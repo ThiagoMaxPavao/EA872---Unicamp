@@ -126,6 +126,7 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
 
     dprintf(fd_log, "----- Response Header -----\n"); // formatacao do logfile
 
+    /* Erro de sintaxe no cabeçalho -> Requisição com problemas = Bad Request */
     if(parseStatus == 1) {
         liberaComandos(comandos_local); // Libera memória que pode ter sido alocada
         cabecalho(400, "close", filename, NULL, -1, socket_msg, fd_log); // Bad Request
@@ -133,8 +134,8 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     }
 
     /* 
-        Salva do parametro Connection para enviar na resposta posteriormente, mantendo
-        a mesma definida pelo cliente em sua requisição.
+        Salva valor do parametro Connection para enviar na resposta posteriormente,
+        mantendo a mesma definida pelo cliente em sua requisição.
     */
     connectionState = getParameter(comandos_local, "Connection");
     if(connectionState == NULL) connectionState = "keep-alive";
@@ -156,6 +157,7 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
         status = get(webspace, url, &fd, filename, authBase64);
         cabecalho(status, connectionState, filename, url, fd, socket_msg, fd_log);
         if(fd != -1) {
+            /* Só envia o arquivo se for uma requisição do tipo GET */
             if(metodo == GET) imprimeConteudo(socket_msg, fd);
             close(fd);
         }
@@ -164,6 +166,7 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
         case OPTIONS:
         url = comandos_local->options->option;
         dupPrintf(socket_msg, fd_log, "HTTP/1.1 200 OK\r\n");
+        /* Inclui o POST nas opções, se a URL for de troca de senha */
         dupPrintf(socket_msg, fd_log, stringEndsWith(url, changePasswordFilename) ? 
         "Allow: GET, HEAD, POST, OPTIONS, TRACE\r\n" : "Allow: GET, HEAD, OPTIONS, TRACE\r\n");
         cabecalho(-1, connectionState, filename, NULL, -1, socket_msg, fd_log);
@@ -171,10 +174,11 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
 
         case TRACE:
         dupPrintf(socket_msg, fd_log, "HTTP/1.1 200 OK\r\n");
+        /* Envia a própria requisição de volta, exceto a primeira linha */
         imprimeComandos(comandos_local->prox, socket_msg, fd_log);
         break;
 
-        case INVALID:
+        case INVALID: // método enviado não reconhecido
         cabecalho(400, "close", filename, NULL, -1, socket_msg, fd_log); // Bad Request
         closeConnection = 1;
         break;
@@ -199,8 +203,8 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
     /* libera toda a memoria alocada para as listas ligadas e as strings. */
     liberaComandos(comandos_local);
 
-    // closeConnection = 0 se não houver "Connection=close" na requisição e não houve erro no processamento (erro 400)
-    // caso contrário, closeConnection = 1
+    // closeConnection = 0 se não houver "Connection=close" na requisição e
+    // não houve erro no processamento. Caso contrário, closeConnection = 1.
     return closeConnection;
 }
 
