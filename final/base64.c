@@ -1,5 +1,6 @@
 /*
 Código obtido de https://stackoverflow.com/a/6782480
+Especificação das funções em base64.h
 */
 
 #include <stdint.h>
