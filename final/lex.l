@@ -22,7 +22,7 @@ metodo      GET|HEAD|OPTIONS|TRACE|POST|PUT|DELETE
                     yylval->string = allocAndCopy(yytext);
                     return METODO; // metodo reconhecido
                 }
-[\n\r]          {
+[\r][\n]          {
                     BEGIN 0; // volta ao modo normal de execucao a cada incio de nova linha
                     return NEWLINE;
                 }
