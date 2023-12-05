@@ -138,7 +138,7 @@ int processRequest(char *webspace, int socket_msg, int fd_log) {
         mantendo a mesma definida pelo cliente em sua requisição.
     */
     connectionState = getParameter(comandos_local, "Connection");
-    if(connectionState == NULL) connectionState = "keep-alive";
+    if(connectionState == NULL) connectionState = "close";
     if(strcmp(connectionState, "close") == 0) closeConnection = 1;
 
     /*
