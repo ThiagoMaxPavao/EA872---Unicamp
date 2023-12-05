@@ -15,7 +15,6 @@ metodo      GET|HEAD|OPTIONS|TRACE|POST|PUT|DELETE
                             yylval->string = allocAndCopy(yytext);
                             return WORD;
                         }
-^#.*            { return COMMENT; }
 :               { BEGIN parametros; return FIELD_SEPARATOR; }
 ,               { return OPTION_SEPARATOR; }
 ^{metodo}       {

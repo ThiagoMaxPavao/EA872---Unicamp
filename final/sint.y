@@ -21,7 +21,6 @@
     p_no_option optionList;
     p_no_command commandPointer;
 }
-%token COMMENT
 %token FIELD_SEPARATOR
 %token OPTION_SEPARATOR
 %token NEWLINE
@@ -39,8 +38,7 @@ linhas: linha linhas    {
                         }
       | linha { *comandos = $1; }
 ;
-linha: COMMENT NEWLINE { $$ = NULL; }
-     | WORD FIELD_SEPARATOR opcoes NEWLINE { $$ = criaComando($1, $3); }
+linha: WORD FIELD_SEPARATOR opcoes NEWLINE { $$ = criaComando($1, $3); }
      | WORD FIELD_SEPARATOR NEWLINE { $$ = criaComando($1, NULL); }
      | METODO opcoes-metodo NEWLINE { $$ = criaComando($1, $2); }
      | NEWLINE { $$ = NULL; }
